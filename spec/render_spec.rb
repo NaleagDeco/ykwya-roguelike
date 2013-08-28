@@ -11,6 +11,15 @@ describe 'Player' do
     player = Player.new(0,0,0)
     player.dead?.should be_true
   end
+
+  it 'should gain 1 gold when most enemies are killed' do
+    player = Player.new(1, 10, 10)
+    monster = Enemy.new(:test, 1, 0, 0)
+
+    old_gold = player.gold
+    player.fight monster while not monster.dead?
+    player.gold.should eq (old_gold + 1)
+  end
 end
 
 describe 'Game' do
@@ -103,7 +112,7 @@ describe 'Orc Race' do
   end
 end
 
-describe 'Enemies' do
+describe 'EnemyFactory' do
   def self.it_should_include_a name, hitpoints, attack, defense
     it "should include a #{name}" do
       enemy = EnemyFactory.send(name)
@@ -120,4 +129,15 @@ describe 'Enemies' do
   it_should_include_a :phoenix, 50, 35, 20
   it_should_include_a :merchant, 30, 70, 5
   it_should_include_a :dragon, 150, 20, 20
+end
+
+describe 'Merchants' do
+  it 'should all become hostile if the player kills any of them.' do
+    m1 = EnemyFactory.merchant
+    m2 = EnemyFactory.merchant
+    
+    p = Player.new(0,0,0)
+    p.fight m1
+    m2.hostile?.should be_true
+  end
 end

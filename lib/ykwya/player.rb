@@ -132,6 +132,7 @@ class Enemy
 
   def to_s
     @symbol.to_s[0]
+  end
 end
 
 class Merchant < Enemy

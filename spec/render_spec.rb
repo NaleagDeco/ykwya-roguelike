@@ -1,6 +1,4 @@
-require 'bundler/setup'
-
-require_relative '../lib/ykwya/player'
+require 'spec_helper'
 
 describe 'Player' do
   it "should print itself out as an '@'" do

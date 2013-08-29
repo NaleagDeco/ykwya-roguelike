@@ -1,0 +1,1 @@
+* We can probably cache the renderer output rather than look up a dictionary each time.

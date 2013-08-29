@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-require 'ykwya/player'
-require 'ykwya/item'
-
 include YKWYA::Player
 include YKWYA::Item
 
@@ -18,7 +15,7 @@ describe 'Player' do
 
   it 'should gain 1 gold when most enemies are killed' do
     player = Player.new(1, 10, 10)
-    monster = Enemy.new(:test, 'T', 1, 0, 0)
+    monster = YKWYA::Enemy::Enemy.new_class(1,0,0).new
 
     old_gold = player.gold
     player.fight monster while not monster.dead?

@@ -1,5 +1,9 @@
 require 'ykwya/version'
 
-module YKWYA
-  # Export modules here?
-end
+require 'ykwya/render'
+
+require 'ykwya/game-piece'
+require 'ykwya/game'
+require 'ykwya/player'
+require 'ykwya/enemy'
+require 'ykwya/item'

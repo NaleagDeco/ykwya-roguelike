@@ -1,14 +1,11 @@
 require 'spec_helper'
 
-require 'ykwya/enemy'
-
 include YKWYA::Enemy
 
 describe 'EnemyFactory' do
   def self.it_should_include_a name, symbol, hitpoints, attack, defense
     it "should include a #{name}" do
       enemy = EnemyFactory.send(name)
-      enemy.to_s.should eq symbol
       enemy.hitpoints.should eq hitpoints
       enemy.attack.should eq attack
       enemy.defense.should eq defense

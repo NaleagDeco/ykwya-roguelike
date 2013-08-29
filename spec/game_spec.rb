@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-require 'ykwya/game'
-require 'ykwya/player'
-
 
 describe 'Game' do
   it "should end when the player's health is <= 0" do

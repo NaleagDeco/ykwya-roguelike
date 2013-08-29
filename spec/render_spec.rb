@@ -16,7 +16,7 @@ describe 'Player' do
 
     old_gold = player.gold
     player.fight monster while not monster.dead?
-    player.gold.should eq (old_gold + 1)
+    player.gold.should eq(old_gold + 1)
   end
 end
 
@@ -43,13 +43,13 @@ describe "Default Race" do
     potion = Potion.new(-10, :@hitpoints)
     player.quaff potion
     new_hp = player.hitpoints
-    new_hp.should eq (old_hp + potion.magnitude)
+    new_hp.should eq(old_hp + potion.magnitude)
 
     old_atk = player.attack
     potion = Potion.new(10, :@attack)
     player.quaff potion
     new_atk = player.attack
-    new_atk.should eq (old_atk + potion.magnitude)
+    new_atk.should eq(old_atk + potion.magnitude)
   end
 end
 
@@ -82,7 +82,7 @@ describe "Elven Race" do
     potion = Potion.new(-10, :@hitpoints)
     player.quaff potion
     new_hp = player.hitpoints
-    new_hp.should eq (old_hp + potion.magnitude.abs)
+    new_hp.should eq(old_hp + potion.magnitude.abs)
   end
 
   it "should treat positive potions normally" do
@@ -91,7 +91,7 @@ describe "Elven Race" do
     potion = Potion.new(10, :@attack)
     player.quaff potion
     new_atk = player.attack
-    new_atk.should eq (old_atk + potion.magnitude)
+    new_atk.should eq(old_atk + potion.magnitude)
   end
 end
 
@@ -139,4 +139,18 @@ describe 'Merchants' do
     p.fight m1
     m2.hostile?.should be_true
   end
+end
+
+describe "Text-based UI" do
+  before(:all) do
+    @renderer = TextRenderer.new
+  end
+
+  def self.glyph_represents glyph, object
+    it('should represent ' + object.class.name + 'with the glyph \''+ glyph + '\'') do
+      object.render_by(@renderer).should eq glyph
+    end
+  end
+
+  glyph_represents 'M', Merchant.new
 end

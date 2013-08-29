@@ -12,7 +12,7 @@ describe 'Player' do
 
   it 'should gain 1 gold when most enemies are killed' do
     player = Player.new(1, 10, 10)
-    monster = Enemy.new(:test, 1, 0, 0)
+    monster = Enemy.new(:test, 'T', 1, 0, 0)
 
     old_gold = player.gold
     player.fight monster while not monster.dead?
@@ -111,22 +111,23 @@ describe 'Orc Race' do
 end
 
 describe 'EnemyFactory' do
-  def self.it_should_include_a name, hitpoints, attack, defense
+  def self.it_should_include_a name, symbol, hitpoints, attack, defense
     it "should include a #{name}" do
       enemy = EnemyFactory.send(name)
+      enemy.to_s.should eq symbol
       enemy.hitpoints.should eq hitpoints
       enemy.attack.should eq attack
       enemy.defense.should eq defense
     end
   end
  
-  it_should_include_a :vampire, 50, 25, 25
-  it_should_include_a :werewolf, 120, 30, 5
-  it_should_include_a :troll, 120, 25, 15
-  it_should_include_a :goblin, 70, 5, 10
-  it_should_include_a :phoenix, 50, 35, 20
-  it_should_include_a :merchant, 30, 70, 5
-  it_should_include_a :dragon, 150, 20, 20
+  it_should_include_a :vampire, 'V', 50, 25, 25
+  it_should_include_a :werewolf, 'W', 120, 30, 5
+  it_should_include_a :troll, 'T', 120, 25, 15
+  it_should_include_a :goblin, 'N', 70, 5, 10
+  it_should_include_a :phoenix, 'X', 50, 35, 20
+  it_should_include_a :merchant, 'M', 30, 70, 5
+  it_should_include_a :dragon, 'D', 150, 20, 20
 end
 
 describe 'Merchants' do

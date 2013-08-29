@@ -91,13 +91,13 @@ end
 
 class EnemyFactory
   class << self
-    [['vampire', 50, 25, 25],
-     ['werewolf', 120, 30, 5],
-     ['troll', 120, 25, 15],
-     ['goblin', 70, 5, 10],
-     #['merchant', 30, 70, 5],
-     ['dragon', 150, 20, 20],
-     ['phoenix', 50, 35, 20]].each do |enemy|
+    [['vampire', 'V', 50, 25, 25],
+     ['werewolf', 'W', 120, 30, 5],
+     ['troll', 'T', 120, 25, 15],
+     ['goblin', 'N', 70, 5, 10],
+     #['merchant', 'M', 30, 70, 5],
+     ['dragon', 'D', 150, 20, 20],
+     ['phoenix', 'X', 50, 35, 20]].each do |enemy|
       self.send(:define_method, enemy[0]) do
         Enemy.new(*enemy)
       end
@@ -110,13 +110,16 @@ class EnemyFactory
 end
 
 class Enemy
+  attr_reader :name
   attr_reader :symbol
   attr_reader :hitpoints
   attr_reader :attack
   attr_reader :defense
 
-  def initialize symbol, hitpoints, attack, defense
+  def initialize name, symbol, hitpoints, attack, defense
+    @name = name
     @hitpoints = hitpoints
+    @symbol = symbol
     @attack = attack
     @defense = defense
   end
@@ -131,13 +134,13 @@ class Enemy
   end
 
   def to_s
-    @symbol.to_s[0]
+    @symbol
   end
 end
 
 class Merchant < Enemy
   def initialize
-    super(:merchant, 30, 70, 5)
+    super(:merchant, 'M', 30, 70, 5)
   end
   
   def hostile?

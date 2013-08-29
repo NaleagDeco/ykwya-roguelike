@@ -1,0 +1,14 @@
+require 'spec_helper'
+
+require 'ykwya/game'
+require 'ykwya/player'
+
+include YKWYA::Gam
+
+describe 'Game' do
+  it "should end when the player's health is <= 0" do
+    player = YKWYA::Player.new(0,0,0)
+    game = Game.new player
+    game.is_over?.should be_true
+  end
+end

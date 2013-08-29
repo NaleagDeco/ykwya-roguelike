@@ -1,9 +1,11 @@
-class Potion
-  attr_reader :attribute
-  attr_reader :magnitude
-  
-  def initialize(magnitude, attribute)
-    @magnitude = magnitude
-    @attribute = attribute
+module YKWYA
+  class Game
+    def initialize player
+      @player = player
+    end
+    
+    def is_over?
+      @player.hitpoints <= 0
+    end
   end
 end

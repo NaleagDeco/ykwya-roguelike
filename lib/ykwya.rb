@@ -1,7 +1,5 @@
-require 'rubygems'
-require 'bundler/setup'
+require 'ykwya/version'
 
-require 'ykwya/player'
-require 'ykwya/enemy'
-require 'ykwya/renderers/text-renderer'
-
+module YKWYA
+  # Export modules here?
+end

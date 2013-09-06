@@ -1,12 +1,11 @@
 require 'spec_helper'
 
-include YKWYA::Render
-include YKWYA::Enemy
+include YKWYA
 
 
 describe "Text-based UI" do
   before(:all) do
-    @renderer = TextRenderer.new
+    @renderer = Render::TextRenderer.new
   end
 
   def self.glyph_represents glyph, object

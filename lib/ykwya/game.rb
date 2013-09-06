@@ -3,7 +3,7 @@ module YKWYA
     def initialize player
       @player = player
     end
-    
+
     def is_over?
       @player.hitpoints <= 0
     end

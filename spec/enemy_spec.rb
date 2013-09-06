@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include YKWYA::Enemy
-
 describe 'EnemyFactory' do
   def self.it_should_include_a name, symbol, hitpoints, attack, defense
     it "should include a #{name}" do
@@ -11,7 +9,7 @@ describe 'EnemyFactory' do
       enemy.defense.should eq defense
     end
   end
- 
+
   it_should_include_a :vampire, 'V', 50, 25, 25
   it_should_include_a :werewolf, 'W', 120, 30, 5
   it_should_include_a :troll, 'T', 120, 25, 15
@@ -25,7 +23,7 @@ describe 'Merchants' do
   it 'should all become hostile if the player kills any of them.' do
     m1 = EnemyFactory.merchant
     m2 = EnemyFactory.merchant
-    
+
     p = Player.new(0,0,0)
     p.fight m1
     m2.hostile?.should be_true

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-include YKWYA::Player
-include YKWYA::Item
+include YKWYA
 
 describe 'Player' do
   it "should print itself out as an '@'" do
@@ -15,7 +14,7 @@ describe 'Player' do
 
   it 'should gain 1 gold when most enemies are killed' do
     player = Player.new(1, 10, 10)
-    monster = YKWYA::Enemy::Enemy.new_class(1,0,0).new
+    monster = YKWYA::Enemy.new_class(1,0,0).new
 
     old_gold = player.gold
     player.fight monster while not monster.dead?

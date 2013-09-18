@@ -33,6 +33,7 @@ module YKWYA
     #
     def quaff p
       new_attr_val = instance_variable_get(p.attribute) + p.magnitude
+      new_attr_val = [0, new_attr_val].max
       instance_variable_set(p.attribute, new_attr_val)
     end
 

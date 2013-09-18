@@ -20,6 +20,17 @@ describe 'Player' do
     player.fight monster while not monster.dead?
     player.gold.should eq(old_gold + 1)
   end
+
+  it 'should never get negative have -ive atk/def by drinking a potion' do
+    player = Player.new(1, 1, 1)
+    curse_attack = Potion.new(-10, :@attack)
+    player.quaff curse_attack
+    player.attack.should be >= 0
+
+    curse_defense = Potion.new(-10, :@defense)
+    player.quaff curse_defense
+    player.attack.should be >= 0
+  end
 end
 
 describe "Default Race" do

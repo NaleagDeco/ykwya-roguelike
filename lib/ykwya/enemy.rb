@@ -64,6 +64,12 @@ module YKWYA
     def attacked_by player
       @hitpoints =- 1
     end
+
+    ##
+    # The amount of gold this monster gives off when killed
+    def hoard
+      1
+    end
   end
 
   ##
@@ -100,6 +106,16 @@ module YKWYA
     def attacked_by player
       super player
       $hostile = true
+    end
+
+    def hoard
+      4
+    end
+  end
+
+  class Dragon < Enemy
+    def hoard
+      6
     end
   end
 end

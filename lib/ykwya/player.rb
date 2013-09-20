@@ -39,7 +39,7 @@ module YKWYA
 
     def fight monster
       monster.attacked_by self
-      self.gain_gold 1 if monster.dead?
+      self.gain_gold monster.hoard if monster.dead?
     end
 
     def to_s

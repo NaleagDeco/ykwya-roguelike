@@ -28,4 +28,32 @@ describe 'Merchants' do
     p.fight m1
     m2.hostile?.should be_true
   end
+
+  it 'should drop 4 gold to the player when killed' do
+    m1 = EnemyFactory.merchant
+    p = Player.new(100, 10, 10)
+
+    old_gold = p.gold
+    until m1.dead?
+      p.fight m1
+    end
+    new_gold = p.gold
+
+    expect(new_gold).to be (old_gold + 4)
+  end
+end
+
+describe 'Dragons' do
+  it 'drops 6 gold when killed' do
+    m1 = EnemyFactory.dragon
+    p = Player.new(100, 10, 10)
+
+    old_gold = p.gold
+    until m1.dead?
+      p.fight m1
+    end
+    new_gold = p.gold
+
+    expect(new_gold).to be (old_gold + 6)
+  end
 end

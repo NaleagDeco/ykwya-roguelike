@@ -4,8 +4,8 @@ describe 'PotionFactory' do
   def self.has_potion name, magnitude, attribute
     it 'creates #{magnitude} #{attribute} potion with #{name} function.' do
       potion = PotionFactory.send(name.to_underscore)
-      potion.magnitude.should be magnitude
-      potion.attribute.should be attribute
+      expect(potion.magnitude).to be magnitude
+      expect(potion.attribute).to be attribute
     end
   end
 

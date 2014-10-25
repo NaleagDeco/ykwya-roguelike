@@ -4,9 +4,9 @@ describe 'EnemyFactory' do
   def self.it_should_include_a name, symbol, hitpoints, attack, defense
     it "should include a #{name}" do
       enemy = EnemyFactory.send(name)
-      enemy.hitpoints.should eq hitpoints
-      enemy.attack.should eq attack
-      enemy.defense.should eq defense
+      expect(enemy.hitpoints).to eq hitpoints
+      expect(enemy.attack).to eq attack
+      expect(enemy.defense).to eq defense
     end
   end
 
@@ -26,7 +26,7 @@ describe 'Merchants' do
 
     p = Player.new(0,0,0)
     p.fight m1
-    m2.hostile?.should be_true
+    expect(m2.hostile?).to be(true)
   end
 
   it 'should drop 4 gold to the player when killed' do
@@ -39,7 +39,7 @@ describe 'Merchants' do
     end
     new_gold = p.gold
 
-    expect(new_gold).to be (old_gold + 4)
+    expect(new_gold).to eq (old_gold + 4)
   end
 end
 
@@ -54,6 +54,6 @@ describe 'Dragons' do
     end
     new_gold = p.gold
 
-    expect(new_gold).to be (old_gold + 6)
+    expect(new_gold).to eq (old_gold + 6)
   end
 end

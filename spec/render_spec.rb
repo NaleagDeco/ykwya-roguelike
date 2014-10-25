@@ -10,7 +10,7 @@ describe "Text-based UI" do
 
   def self.glyph_represents glyph, object
     it("should represent #{object.class.name} with the glyph '#{glyph}'") do
-      object.render_by(@renderer).should eq glyph
+      expect(object.render_by @renderer).to eq glyph
     end
   end
 

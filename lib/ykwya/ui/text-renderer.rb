@@ -1,7 +1,7 @@
 module YKWYA
   ##
   # Renderers for the game
-  module Render
+  module UI 
     ##
     # Render the game in a traditional roguelike way.
     class TextRenderer

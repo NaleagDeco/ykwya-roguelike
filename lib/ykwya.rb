@@ -1,6 +1,6 @@
 require 'ykwya/version'
 
-require 'ykwya/render'
+require 'ykwya/ui'
 
 require 'ykwya/game-piece'
 require 'ykwya/game'

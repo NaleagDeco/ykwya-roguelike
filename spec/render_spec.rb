@@ -2,7 +2,6 @@ require 'spec_helper'
 
 include YKWYA
 
-
 describe "Text-based UI" do
   before(:all) do
     @renderer = Render::TextRenderer.new
@@ -28,5 +27,5 @@ describe "Text-based UI" do
   glyph_represents 'G', Gold.new
 
   # Player
-  glyph_represents '@', Player.new(0,0,0)
+  glyph_represents '@', Player.new(0, 0, 0)
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'EnemyFactory' do
-  def self.it_should_include_a name, symbol, hitpoints, attack, defense
+  def self.it_should_include_a(name, symbol, hitpoints, attack, defense)
     it "should include a #{name}" do
       enemy = EnemyFactory.send(name)
       expect(enemy.hitpoints).to eq hitpoints
@@ -24,7 +24,7 @@ describe 'Merchants' do
     m1 = EnemyFactory.merchant
     m2 = EnemyFactory.merchant
 
-    p = Player.new(0,0,0)
+    p = Player.new(0, 0, 0)
     p.fight m1
     expect(m2.hostile?).to be(true)
   end
@@ -34,12 +34,10 @@ describe 'Merchants' do
     p = Player.new(100, 10, 10)
 
     old_gold = p.gold
-    until m1.dead?
-      p.fight m1
-    end
+    p.fight m1 until m1.dead?
     new_gold = p.gold
 
-    expect(new_gold).to eq (old_gold + 4)
+    expect(new_gold).to eq(old_gold + 4)
   end
 end
 
@@ -49,11 +47,9 @@ describe 'Dragons' do
     p = Player.new(100, 10, 10)
 
     old_gold = p.gold
-    until m1.dead?
-      p.fight m1
-    end
+    p.fight m1 until m1.dead?
     new_gold = p.gold
 
-    expect(new_gold).to eq (old_gold + 6)
+    expect(new_gold).to eq(old_gold + 6)
   end
 end

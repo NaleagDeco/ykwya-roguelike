@@ -21,7 +21,7 @@ describe 'Player' do
     expect(player.gold).to eq(old_gold + 1)
   end
 
-  it 'should never get negative have -ive atk/def by drinking a potion' do
+  it 'should never get negative atk/def by drinking a potion' do
     player = Player.new(1, 1, 1)
     curse_attack = Potion.new(-10, :@attack)
     player.quaff curse_attack

@@ -6,3 +6,5 @@ require 'ykwya'
 
 ui = YKWYA::UI::CursesUI.new
 ui.run!
+
+puts "Goodbye!"

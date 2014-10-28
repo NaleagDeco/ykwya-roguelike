@@ -4,5 +4,12 @@ Feature: Basic functionaltiy
 
   Scenario: Quitting the game
     Given I run `ykwya` interactively
-    When I type "q"
+    When I type the character "q"
+    And I type the character "y"
     Then the exit status should be 0
+
+  Scenario: Deciding against quitting the game
+    Given I run `ykwya` interactively
+    When I type "q"
+    And I type "n"
+    Then the exit status should not be 0

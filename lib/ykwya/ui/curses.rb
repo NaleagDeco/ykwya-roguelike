@@ -4,6 +4,10 @@ include Curses
 
 module YKWYA::UI
   class CursesUI
+    def initialize
+      #@renderer = CursesRenderer.new
+    end
+
     def run!
       noecho
 
@@ -12,8 +16,10 @@ module YKWYA::UI
       @main.box('|', '-')
       @status = @screen.subwin(5, 79, 25, 0)
 
+      @game = YKWYA::Game.new YKWYA::Human.new
 
       loop do
+        render!
         action = @screen.getch
         if action == 'q'
           @status.clear
@@ -24,6 +30,10 @@ module YKWYA::UI
       end
 
       close_screen
+    end
+
+    def render!
+
     end
   end
 end

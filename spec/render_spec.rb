@@ -28,4 +28,12 @@ describe "Text-based UI" do
 
   # Player
   glyph_represents '@', Player.new(0, 0, 0)
+
+  # Scenery
+  glyph_represents '+', Door.new
+  glyph_represents '-', HorizontalWall.new
+  glyph_represents '|', VerticalWall.new
+  glyph_represents '.', Empty.new
+  glyph_represents '#', Passage.new
+  glyph_represents ' ', Inaccessible.new
 end

@@ -25,6 +25,7 @@ module YKWYA
                   'Empty' => '.',
                   'Door' => '+',
                   'Passage' => '#',
+                  'Inaccessible' => ' '
                  }
 
       ##

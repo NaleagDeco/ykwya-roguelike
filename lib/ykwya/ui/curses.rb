@@ -1,11 +1,17 @@
+require_relative 'text-renderer'
+require_relative '../game'
+
 require 'curses'
 
 include Curses
 
 module YKWYA::UI
   class CursesUI
+    OFFSETX = 1
+    OFFSETY = 1
+
     def initialize
-      #@renderer = CursesRenderer.new
+      @renderer = TextRenderer.new
     end
 
     def run!
@@ -16,7 +22,10 @@ module YKWYA::UI
       @main.box('|', '-')
       @status = @screen.subwin(5, 79, 25, 0)
 
-      @game = YKWYA::Game.new YKWYA::Human.new
+      file = File.open(
+        File.expand_path('../../../templates/map.txt',
+                         File.dirname(__FILE__)))
+      @map = YKWYA::Level.load_from_file(file)
 
       loop do
         render!
@@ -33,7 +42,13 @@ module YKWYA::UI
     end
 
     def render!
-
+      @map.map.with_index(offset=OFFSETY) do |row, i|
+        row.map.with_index(offset=OFFSETX) do |col, j|
+          @main.setpos(i, j)
+          @main.addch(col.render_by @renderer)
+        end
+      end
+      @main.refresh
     end
   end
 end

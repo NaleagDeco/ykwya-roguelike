@@ -4,7 +4,7 @@ include YKWYA
 
 describe "Text-based UI" do
   before(:all) do
-    @renderer = Render::TextRenderer.new
+    @renderer = UI::TextRenderer.new
   end
 
   def self.glyph_represents glyph, object

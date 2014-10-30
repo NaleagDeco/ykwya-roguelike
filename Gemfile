@@ -5,6 +5,12 @@ ruby "2.1.3"
 # gem "rails"
 gem "curses"
 
-gem "rspec"
-gem "cucumber"
-gem "aruba"
+group :development do
+  gem 'pry'
+end
+
+group :test do
+  gem "rspec"
+  gem "cucumber"
+  gem "aruba"
+end

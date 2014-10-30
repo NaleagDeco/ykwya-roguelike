@@ -1,4 +1,4 @@
-require 'ykwya/game-piece'
+require_relative 'game-piece'
 
 module YKWYA
   class Player

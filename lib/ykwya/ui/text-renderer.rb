@@ -1,7 +1,7 @@
 module YKWYA
   ##
   # Renderers for the game
-  module UI 
+  module UI
     ##
     # Render the game in a traditional roguelike way.
     class TextRenderer
@@ -19,6 +19,12 @@ module YKWYA
                   # Items
                   'Potion' => 'P',
                   'Gold' => 'G',
+                  # Scenery
+                  'HorizontalWall' => '-',
+                  'VerticalWall' => '|',
+                  'Empty' => '.',
+                  'Door' => '+',
+                  'Passage' => '#',
                  }
 
       ##

@@ -1,9 +1,9 @@
-require 'ykwya/version'
+require_relative 'ykwya/version'
 
-require 'ykwya/ui'
+require_relative 'ykwya/ui'
 
-require 'ykwya/game-piece'
-require 'ykwya/game'
-require 'ykwya/player'
-require 'ykwya/enemy'
-require 'ykwya/item'
+require_relative 'ykwya/game-piece'
+require_relative 'ykwya/game'
+require_relative 'ykwya/player'
+require_relative 'ykwya/enemy'
+require_relative 'ykwya/item'

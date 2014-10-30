@@ -1,4 +1,4 @@
-require 'ykwya/game-piece'
+require_relative 'game-piece'
 
 ##
 # A helper method to convert StudlyCaps to underscore-delimited format

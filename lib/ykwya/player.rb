@@ -45,6 +45,10 @@ module YKWYA
     def to_s
       '@'
     end
+
+    def race
+      self.class.name.split('::').last
+    end
   end
 
   ##

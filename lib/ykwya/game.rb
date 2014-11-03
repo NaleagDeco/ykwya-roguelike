@@ -1,13 +1,50 @@
+require_relative 'tile'
+
 module YKWYA
   class Game
-    attr_reader :player
-
-    def initialize(player)
+    def initialize(player, map)
       @player = player
+      @map = map
+
+      @player_coords = find_empty_space
     end
 
     def is_over?
       @player.hitpoints <= 0
+    end
+
+    def player_coords
+      @player_coords.clone
+    end
+
+    def player_left!
+      new_loc = @map[player_coords[0]][@player_coords[1] - 1]
+      unless new_loc == Inaccessible || new_loc == HorizontalWall ||
+         new_loc == VerticalWall
+        @player_coords[1] -= 1
+      end
+    end
+
+    def player_right!
+      new_loc = @map[@player_coords[0]][@player_coords[1] + 1]
+      @player_coords[1] += 1 unless new_loc.inaccessible?
+    end
+
+    private
+
+    def find_empty_space
+      result = [nil, nil]
+      @map.each_index do |row_index|
+        col_index = @map[row_index].find_index do |elem|
+          elem.instance_of? Empty
+        end
+        if col_index
+          result = [row_index, col_index]
+          break
+        end
+      end
+
+      result
     end
   end
 

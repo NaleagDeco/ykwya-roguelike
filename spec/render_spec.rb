@@ -28,6 +28,10 @@ describe "Text-based UI" do
 
   # Player
   glyph_represents '@', Player.new(0, 0, 0)
+  glyph_represents '@', Human.new
+  glyph_represents '@', Orc.new
+  glyph_represents '@', Elf.new
+  glyph_represents '@', Dwarf.new
 
   # Scenery
   glyph_represents '+', Door.new

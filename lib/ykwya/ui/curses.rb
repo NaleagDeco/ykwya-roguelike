@@ -14,11 +14,11 @@ module YKWYA::UI
 
     def initialize
       @renderer = TextRenderer.new
-      @game = YKWYA::Game.new YKWYA::Human.new
     end
 
     def run!
       noecho
+      curs_set 0
 
       @screen = Window.new(30, COLS, 0, 0)
       @main = @screen.subwin(25, COLS, 0, 0)
@@ -29,6 +29,9 @@ module YKWYA::UI
         File.expand_path('../../../templates/map.txt',
                          File.dirname(__FILE__)))
       @map = YKWYA::Level.load_from_file(file)
+
+      @player = YKWYA::Human.new
+      @game = YKWYA::Game.new(@player, @map)
 
       loop do
         render!
@@ -45,30 +48,50 @@ module YKWYA::UI
     end
 
     def render!
-      @map.map.with_index(offset=OFFSETY) do |row, i|
-        row.map.with_index(offset=OFFSETX) do |col, j|
+      @map.map.with_index(offset = OFFSETY) do |row, i|
+        row.map.with_index(offset = OFFSETX) do |col, j|
           @main.setpos(i, j)
           @main.addch(col.render_by @renderer)
         end
       end
+      draw_player!
       render_status!
       @main.refresh
     end
 
     def render_status!
-      line1_left = "Race: #{@game.player.race} Gold: #{@game.player.gold}"
+      line1_left = "Race: #{@player.race} Gold: #{@player.gold}"
       line1_right = "Floor 1"
-      line2 = "HP: #{@game.player.hitpoints} \n"
-      line3 = "Atk: #{@game.player.attack} \n"
-      line4 = "Def: #{@game.player.defense} \n"
+      line2 = "HP: #{@player.hitpoints} \n"
+      line3 = "Atk: #{@player.attack} \n"
+      line4 = "Def: #{@player.defense} \n"
       line5 = "Action:\n"
       @status.clear
-      @status << line1_left + " " * (COLS - line1_left.size - line1_right.size) + line1_right
+      @status << line1_left + ' ' * (COLS - line1_left.size - line1_right.size) + line1_right
       @status << line2
       @status << line3
       @status << line4
       @status << line5
       @status.refresh
+    end
+
+    def draw_player!
+      @main.setpos(*(map_to_curses @game.player_coords))
+      @main.addch(@player.render_by(@renderer))
+    end
+
+    private
+
+    def breakpoint
+      require 'pry'
+
+      close_screen
+      binding.pry
+      doupdate
+    end
+
+    def map_to_curses(coords)
+      coords.map { |coord| coord + 1 }
     end
   end
 end

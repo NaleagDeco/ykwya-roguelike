@@ -16,6 +16,10 @@ module YKWYA
                   'Werewolf' => 'W',
                   # Players
                   'Player' => '@',
+                  'Human' => '@',
+                  'Orc' => '@',
+                  'Dwarf' => '@',
+                  'Elf' => '@',
                   # Items
                   'Potion' => 'P',
                   'Gold' => 'G',

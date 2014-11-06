@@ -1,8 +1,10 @@
 require_relative 'text-renderer'
 require_relative '../game'
 require_relative '../player'
+require_relative '../action'
 
 require 'curses'
+require 'frappuccino'
 
 include Curses
 
@@ -14,6 +16,7 @@ module YKWYA::UI
 
     def initialize
       @renderer = TextRenderer.new
+      @input_stream = Frappuccino::Stream.new(YKWYA::Action.instance)
     end
 
     def run!
@@ -35,16 +38,30 @@ module YKWYA::UI
 
       loop do
         render!
-        action = @screen.getch
-        if action == 'q'
+        input_char = @screen.getch
+        if input_char == 'q'
           @status.clear
           @status.setpos(@status.begy, @status.begx)
           @status << "Do you really want to quit? (Y/N)"
           break if (@status.getch == 'y')
         end
+        execute_command! input_char
       end
 
       close_screen
+    end
+
+    def execute_command!(char)
+      case char
+      when 'h'
+        YKWYA::Action.instance.move_left
+      when 'j'
+        YKWYA::Action.instance.move_down
+      when 'k'
+        YKWYA::Action.instance.move_up
+      when 'l'
+        YKWYA::Action.instance.move_right
+      end
     end
 
     def render!

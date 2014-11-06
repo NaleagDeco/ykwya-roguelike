@@ -18,6 +18,7 @@ GEM
     curses (1.0.1)
     diff-lcs (1.2.5)
     ffi (1.9.6)
+    frappuccino (0.3.0)
     gherkin (2.12.2)
       multi_json (~> 1.3)
     interception (0.5)
@@ -52,6 +53,7 @@ DEPENDENCIES
   aruba
   cucumber
   curses
+  frappuccino
   pry
   pry-rescue
   rspec

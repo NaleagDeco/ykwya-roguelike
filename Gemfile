@@ -4,6 +4,7 @@ ruby "2.1.3"
 
 # gem "rails"
 gem "curses"
+gem 'frappuccino'
 
 group :development do
   gem 'pry'

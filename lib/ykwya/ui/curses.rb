@@ -34,7 +34,7 @@ module YKWYA::UI
       @map = YKWYA::Level.load_from_file(file)
 
       @player = YKWYA::Human.new
-      @game = YKWYA::Game.new(@player, @map)
+      @game = YKWYA::Game.new(@player, @map, @input_stream)
 
       loop do
         render!

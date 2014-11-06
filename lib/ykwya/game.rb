@@ -2,11 +2,24 @@ require_relative 'tile'
 
 module YKWYA
   class Game
-    def initialize(player, map)
+    def initialize(player, map, input_stream)
       @player = player
       @map = map
 
       @player_coords = find_empty_space
+
+      input_stream
+        .select { |event| event == :move_left }
+        .on_value { |_| player_left! }
+      input_stream
+        .select { |event| event == :move_right }
+        .on_value { |_| player_right! }
+      input_stream
+        .select { |event| event == :move_up }
+        .on_value { |_| player_up! }
+      input_stream
+        .select { |event| event == :move_down }
+        .on_value { |_| player_down! }
     end
 
     def is_over?
@@ -18,16 +31,23 @@ module YKWYA
     end
 
     def player_left!
-      new_loc = @map[player_coords[0]][@player_coords[1] - 1]
-      unless new_loc == Inaccessible || new_loc == HorizontalWall ||
-         new_loc == VerticalWall
-        @player_coords[1] -= 1
-      end
+      new_loc = @map[@player_coords[0]][@player_coords[1] - 1]
+      @player_coords[1] -= 1 unless new_loc.inaccessible?
     end
 
     def player_right!
       new_loc = @map[@player_coords[0]][@player_coords[1] + 1]
       @player_coords[1] += 1 unless new_loc.inaccessible?
+    end
+
+    def player_up!
+      new_loc = @map[@player_coords[0] - 1][@player_coords[1]]
+      @player_coords[0] -= 1 unless new_loc.inaccessible?
+    end
+
+    def player_down!
+      new_loc = @map[@player_coords[0] + 1][@player_coords[1]]
+      @player_coords[0] += 1 unless new_loc.inaccessible?
     end
 
     private

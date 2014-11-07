@@ -1,8 +1,10 @@
+require 'frappuccino'
+
 include YKWYA
 
 describe 'Player' do
   def ensure_moves_n_spaces_right(map, attempted, expected)
-    game = Game.new(Human.new, map)
+    game = Game.new(Human.new, map, Frappuccino::Stream.new)
     old_coords = game.player_coords
     attempted.times do
       game.player_right!

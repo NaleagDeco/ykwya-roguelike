@@ -20,6 +20,18 @@ module YKWYA
       input_stream
         .select { |event| event == :move_down }
         .on_value { |_| player_down! }
+      input_stream
+        .select { |event| event == :move_downleft }
+        .on_value { |_| player_downleft! }
+      input_stream
+        .select { |event| event == :move_downright }
+        .on_value { |_| player_downright! }
+      input_stream
+        .select { |event| event == :move_upleft }
+        .on_value { |_| player_upleft! }
+      input_stream
+        .select { |event| event == :move_upright }
+        .on_value { |_| player_upright! }
     end
 
     def is_over?
@@ -44,6 +56,22 @@ module YKWYA
 
     def player_down!
       player_move! [1, 0]
+    end
+
+    def player_upleft!
+      player_move! [-1, -1]
+    end
+
+    def player_upright!
+      player_move! [-1, 1]
+    end
+
+    def player_downleft!
+      player_move! [1, -1]
+    end
+
+    def player_downright!
+      player_move! [1, 1]
     end
 
     private

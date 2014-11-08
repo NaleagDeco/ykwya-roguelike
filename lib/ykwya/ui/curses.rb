@@ -54,13 +54,21 @@ module YKWYA::UI
     def execute_command!(char)
       case char
       when 'h'
-        YKWYA::Action.instance.move_left
+        YKWYA::Action.instance.move_left!
       when 'j'
-        YKWYA::Action.instance.move_down
+        YKWYA::Action.instance.move_down!
       when 'k'
-        YKWYA::Action.instance.move_up
+        YKWYA::Action.instance.move_up!
       when 'l'
-        YKWYA::Action.instance.move_right
+        YKWYA::Action.instance.move_right!
+      when 'y'
+        YKWYA::Action.instance.move_upleft!
+      when 'u'
+        YKWYA::Action.instance.move_upright!
+      when 'b'
+        YKWYA::Action.instance.move_downleft!
+      when 'n'
+        YKWYA::Action.instance.move_downright!
       end
     end
 

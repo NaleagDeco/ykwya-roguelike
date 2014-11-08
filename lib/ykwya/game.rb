@@ -31,26 +31,31 @@ module YKWYA
     end
 
     def player_left!
-      new_loc = @map[@player_coords[0]][@player_coords[1] - 1]
-      @player_coords[1] -= 1 unless new_loc.inaccessible?
+      player_move! [0, -1]
     end
 
     def player_right!
-      new_loc = @map[@player_coords[0]][@player_coords[1] + 1]
-      @player_coords[1] += 1 unless new_loc.inaccessible?
+      player_move! [0, 1]
     end
 
     def player_up!
-      new_loc = @map[@player_coords[0] - 1][@player_coords[1]]
-      @player_coords[0] -= 1 unless new_loc.inaccessible?
+      player_move! [-1, 0]
     end
 
     def player_down!
-      new_loc = @map[@player_coords[0] + 1][@player_coords[1]]
-      @player_coords[0] += 1 unless new_loc.inaccessible?
+      player_move! [1, 0]
     end
 
     private
+
+    def player_move!(offset)
+      new_coords = @player_coords.zip(offset).map do |elem|
+        elem.reduce(:+)
+      end
+      new_loc = @map[new_coords[0]][new_coords[1]]
+
+      @player_coords = new_coords unless new_loc.inaccessible?
+    end
 
     def find_empty_space
       result = [nil, nil]

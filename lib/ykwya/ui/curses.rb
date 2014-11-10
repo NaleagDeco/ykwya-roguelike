@@ -28,10 +28,7 @@ module YKWYA::UI
       @main.box('|', '-')
       @status = @screen.subwin(5, COLS, 25, 0)
 
-      file = File.open(
-        File.expand_path('../../../templates/map.txt',
-                         File.dirname(__FILE__)))
-      @map = YKWYA::Level.load_from_file(file)
+      @map = YKWYA::Level.new.map
 
       @player = YKWYA::Human.new
       @game = YKWYA::Game.new(@player, @map, @input_stream)

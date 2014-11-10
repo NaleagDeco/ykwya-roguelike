@@ -1,8 +1,6 @@
 describe 'level' do
-  it 'should construct a room from a given file' do
-    filename = File.expand_path('../templates/map.txt',
-                                File.dirname(__FILE__))
-    map = YKWYA::Level.load_from_file(File.open(filename))
+  it 'should construct a map from a given file' do
+    map = YKWYA::Level.new.map
 
     expect(map.size).to eq(YKWYA::Level::ROWS)
     map.each do |row|

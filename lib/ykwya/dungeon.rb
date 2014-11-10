@@ -1,20 +1,15 @@
 module YKWYA
-  class Dungeon
-    def initialize(seed_file)
-      @seed_level = Level.load_from_file seed_file
-      @floors = []
-    end
-
-    def switch_level(level)
-      if floors[level].nil?
-        floors[level] = @seed_level.clone{}
-      end
-    end
-  end
-
   class Level
     ROWS = 23
     COLS = 77
+
+    attr_reader :map
+
+    def initialize
+      filename = File.expand_path('../../templates/map.txt',
+                                  File.dirname(__FILE__))
+      @map = self.class.load_from_file File.open(filename)
+    end
 
     def self.load_from_file(file)
       map = []

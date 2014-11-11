@@ -1,10 +1,14 @@
+require_relative 'dungeon-builder'
 require_relative 'tile'
 
 module YKWYA
   class Game
-    def initialize(player, map, input_stream)
+
+    attr_reader :dungeon
+
+    def initialize(player, input_stream, builder = nil)
       @player = player
-      @map = map
+      @dungeon = YKWYA::Dungeon.new builder
 
       @player_coords = find_empty_space
 
@@ -80,24 +84,13 @@ module YKWYA
       new_coords = @player_coords.zip(offset).map do |elem|
         elem.reduce(:+)
       end
-      new_loc = @map[new_coords[0]][new_coords[1]]
+      new_loc = @dungeon.map[[new_coords[0], new_coords[1]]]
 
       @player_coords = new_coords unless new_loc.inaccessible?
     end
 
     def find_empty_space
-      result = [nil, nil]
-      @map.each_index do |row_index|
-        col_index = @map[row_index].find_index do |elem|
-          elem.instance_of? Empty
-        end
-        if col_index
-          result = [row_index, col_index]
-          break
-        end
-      end
-
-      result
+      @dungeon.map.select { |k, v| v == YKWYA::Empty.new }.keys[0]
     end
   end
 end

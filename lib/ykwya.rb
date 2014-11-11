@@ -1,6 +1,7 @@
 require_relative 'ykwya/version'
 
 require_relative 'ykwya/ui'
+require_relative 'ykwya/dungeon-builder'
 
 require_relative 'ykwya/action'
 require_relative 'ykwya/dungeon'

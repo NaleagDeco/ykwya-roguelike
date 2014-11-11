@@ -28,10 +28,8 @@ module YKWYA::UI
       @main.box('|', '-')
       @status = @screen.subwin(5, COLS, 25, 0)
 
-      @map = YKWYA::Level.new.map
-
       @player = YKWYA::Human.new
-      @game = YKWYA::Game.new(@player, @map, @input_stream)
+      @game = YKWYA::Game.new(@player, @input_stream)
 
       loop do
         render!
@@ -70,14 +68,18 @@ module YKWYA::UI
     end
 
     def render!
-      @map.map.with_index(offset = OFFSETY) do |row, i|
-        row.map.with_index(offset = OFFSETX) do |col, j|
-          @main.setpos(i, j)
-          @main.addch(col.render_by @renderer)
-        end
-      end
-      draw_player!
+      render_main_screen!
       render_status!
+    end
+
+    def render_main_screen!
+      @main.clear
+      draw_map!
+      draw_enemies!
+      draw_gold!
+      draw_potions!
+      draw_stairway!
+      draw_player!
       @main.refresh
     end
 
@@ -88,8 +90,11 @@ module YKWYA::UI
       line3 = "Atk: #{@player.attack} \n"
       line4 = "Def: #{@player.defense} \n"
       line5 = "Action:\n"
+
       @status.clear
-      @status << line1_left + ' ' * (COLS - line1_left.size - line1_right.size) + line1_right
+      @status << line1_left +
+        ' ' * (COLS - line1_left.size - line1_right.size) +
+        line1_right
       @status << line2
       @status << line3
       @status << line4
@@ -97,9 +102,32 @@ module YKWYA::UI
       @status.refresh
     end
 
+    def draw_map!
+      @game.dungeon.map.each_pair do |coords, tile|
+        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
+        @main.addch(tile.render_by @renderer)
+      end
+    end
+
+    def draw_enemies!
+    end
+
+    def draw_gold!
+    end
+
+    def draw_stairway!
+    end
+
     def draw_player!
       @main.setpos(*(map_to_curses @game.player_coords))
       @main.addch(@player.render_by(@renderer))
+    end
+
+    def draw_potions!
+      @game.dungeon.potions.each do |coords|
+        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
+        @main.addch(coords[2].render_by @renderer)
+      end
     end
 
     private

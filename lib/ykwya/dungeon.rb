@@ -1,45 +1,47 @@
+require_relative 'item'
+
+require_relative 'dungeon-builder/build-from-io'
+
 module YKWYA
+  class Dungeon
+
+    def initialize(builder = nil)
+      file = File.open File.expand_path('../../templates/map.txt',
+                                        File.dirname(__FILE__))
+      builder = builder || YKWYA::DungeonBuilder::BuildFromIO.new(file)
+      @level = Level.new(builder)
+    end
+
+    def map
+      @level.map
+    end
+
+    def potions
+      @level.potions
+    end
+  end
+
   class Level
     ROWS = 23
     COLS = 77
 
-    attr_reader :map
+    attr_reader :map, :potions
 
-    def initialize
-      filename = File.expand_path('../../templates/map.txt',
-                                  File.dirname(__FILE__))
-      @map = self.class.load_from_file File.open(filename)
-    end
+    def initialize(builder)
+      @builder = builder
 
-    def self.load_from_file(file)
-      map = []
-      file.each_line do |line|
-        map << []
-        line.each_char do |char|
-          map[-1] << glyph_to_object(char)
-        end
-        map[-1] += [Inaccessible.new] * (COLS - map.last.size)
-      end
-
-      map += ([Inaccessible.new] * COLS) * (ROWS - map.size)
+      @map = @builder.dungeon
+      @potions = initialize_potions
     end
 
     private
 
-    def self.glyph_to_object(char)
-      case char
-      when '|'
-        VerticalWall.new
-      when '-'
-        HorizontalWall.new
-      when '#'
-        Passage.new
-      when '.'
-        Empty.new
-      when '+'
-        Door.new
-      else
-        Inaccessible.new
+    def initialize_potions
+      potion_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
+                      .keys.sample(10)
+
+      potion_spaces.map do |coords|
+        coords.clone << PotionFactory.restore_health
       end
     end
   end

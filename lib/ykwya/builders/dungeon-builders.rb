@@ -1,3 +1,5 @@
+require_relative '../tile'
+
 module YKWYA
   module Builders
     class DungeonFromIO
@@ -47,6 +49,7 @@ module YKWYA
     class DungeonFromHash
       def initialize(hash)
         @seed_hash = hash.clone
+        @seed_hash.default = Inaccessible.new
       end
 
       def build_dungeon

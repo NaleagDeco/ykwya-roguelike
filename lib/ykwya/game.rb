@@ -1,4 +1,3 @@
-require_relative 'dungeon-builder'
 require_relative 'tile'
 
 module YKWYA

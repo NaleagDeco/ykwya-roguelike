@@ -1,6 +1,6 @@
 require_relative 'item'
 
-require_relative 'dungeon-builder/build-from-io'
+require_relative 'builders/dungeon-builders'
 
 module YKWYA
   class Dungeon
@@ -8,7 +8,7 @@ module YKWYA
     def initialize(builder = nil)
       file = File.open File.expand_path('../../templates/map.txt',
                                         File.dirname(__FILE__))
-      builder = builder || YKWYA::DungeonBuilder::BuildFromIO.new(file)
+      builder = builder || YKWYA::Builders::DungeonFromIO.new(file)
       @level = Level.new(builder)
     end
 
@@ -30,7 +30,7 @@ module YKWYA
     def initialize(builder)
       @builder = builder
 
-      @map = @builder.dungeon
+      @map = @builder.build_dungeon
       @potions = initialize_potions
     end
 

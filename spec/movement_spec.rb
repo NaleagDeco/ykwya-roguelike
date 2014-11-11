@@ -14,42 +14,42 @@ describe 'Player' do
   end
 
   it 'can move from one empty space to another empty space' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('|..|')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('|..|')
     ensure_moves_n_spaces_right(builder, 1, 1)
   end
 
   it 'cannot move from empty space into a wall' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('|.-|')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('|.-|')
     ensure_moves_n_spaces_right(builder, 1, 0)
   end
 
   it 'cannot move from a passage into inaccessible space' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('.#  ')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('.#  ')
     ensure_moves_n_spaces_right(builder, 2, 1)
   end
 
   it 'cannot move from empty space into a closed door' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('.+#|')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('.+#|')
     ensure_moves_n_spaces_right(builder, 1, 0)
   end
 
   it 'can move from empty space into an open door' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('|.*#')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('|.*#')
     ensure_moves_n_spaces_right(builder, 1, 1)
   end
 
   it 'can move from an open door into a passage' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('.*# ')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('.*# ')
     ensure_moves_n_spaces_right(builder, 2, 2)
   end
 
   it 'can move from an open door into empty space' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('.*.|')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('.*.|')
     ensure_moves_n_spaces_right(builder, 1, 1)
   end
 
   it 'cannot move from a passage into a closed door' do
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new StringIO.new('.#+|')
+    builder = YKWYA::Builders::DungeonFromIO.new StringIO.new('.#+|')
     ensure_moves_n_spaces_right(builder, 2, 1)
   end
 end

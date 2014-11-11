@@ -1,11 +1,11 @@
 module YKWYA
-  module DungeonBuilder
-    class BuildFromIO
+  module Builders
+    class DungeonFromIO
       def initialize(level_io)
         @level_io = level_io
       end
 
-      def dungeon
+      def build_dungeon
         map = Hash.new(YKWYA::Inaccessible.new)
 
         row = -1
@@ -41,6 +41,16 @@ module YKWYA
         else
           Inaccessible.new
         end
+      end
+    end
+
+    class DungeonFromHash
+      def initialize(hash)
+        @seed_hash = hash.clone
+      end
+
+      def build_dungeon
+        @seed_hash.clone
       end
     end
   end

@@ -2,7 +2,7 @@ describe 'floor' do
   before(:each) do
     file = File.open File.expand_path('../templates/map.txt',
                                       File.dirname(__FILE__))
-    builder = YKWYA::DungeonBuilder::BuildFromIO.new file
+    builder = YKWYA::Builders::DungeonFromIO.new file
     @level = YKWYA::Level.new(builder)
   end
 

@@ -2,8 +2,10 @@ describe 'floor' do
   before(:each) do
     file = File.open File.expand_path('../templates/map.txt',
                                       File.dirname(__FILE__))
-    builder = YKWYA::Builders::DungeonFromIO.new file
-    @level = YKWYA::Level.new(builder)
+    @terrain_builder = YKWYA::Builders::DungeonFromIO.new file
+    @potion_builder = YKWYA::Builders::NoPotions.new
+
+    @level = YKWYA::Level.new(@terrain_builder, @potion_builder)
   end
 
   it 'should construct a map from a given file' do
@@ -25,9 +27,7 @@ describe 'floor' do
     end
   end
 
-  it 'should always have ten potions to start' do
-    potions = @level.potions
-
-    expect(potions.size).to eq(10)
+  it 'should have as many potions as builder created' do
+    expect(@level.potions.size).to eq(@potion_builder.build_potions.size)
   end
 end

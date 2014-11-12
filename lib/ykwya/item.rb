@@ -53,7 +53,7 @@ module YKWYA
     include GamePieceMixin
   end
 
-  class PotionFactory
+  module PotionFactory
     class << self
       Potion.potion_seed.each do |potion|
         self.send(:define_method, potion[0].to_underscore) do

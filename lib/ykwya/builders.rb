@@ -1,3 +1,4 @@
-require_relative 'builders/dungeon-builders.rb'
-require_relative 'builders/potion-builders.rb'
-require_relative 'builders/monster-builders.rb'
+require_relative 'builders/dungeon-builders'
+require_relative 'builders/potion-builders'
+require_relative 'builders/monster-builders'
+require_relative 'builders/gold-builders'

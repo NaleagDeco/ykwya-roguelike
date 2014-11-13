@@ -53,6 +53,9 @@ module YKWYA
     include GamePieceMixin
   end
 
+  class NormalPile < Gold
+  end
+
   module PotionFactory
     class << self
       Potion.potion_seed.each do |potion|

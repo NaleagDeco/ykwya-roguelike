@@ -10,6 +10,7 @@ module YKWYA
       @dungeon = dungeon
 
       @player_coords = find_empty_space
+      @stairway_coords = find_last_empty_space
 
       input_stream
         .select { |event| event == :move_left }
@@ -43,6 +44,10 @@ module YKWYA
 
     def player_coords
       @player_coords.clone
+    end
+
+    def stairway_coords
+      @stairway_coords.clone
     end
 
     def player_left!
@@ -90,6 +95,10 @@ module YKWYA
 
     def find_empty_space
       @dungeon.map.select { |k, v| v == YKWYA::Empty.new }.keys[0]
+    end
+
+    def find_last_empty_space
+      @dungeon.map.select { |k, v| v == YKWYA::Empty.new }.keys[-1]
     end
   end
 end

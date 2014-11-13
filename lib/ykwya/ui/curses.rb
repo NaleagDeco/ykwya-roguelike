@@ -125,6 +125,8 @@ module YKWYA::UI
     end
 
     def draw_stairway!
+      @main.setpos(*(map_to_curses @game.stairway_coords))
+      @main.addch('\\')
     end
 
     def draw_player!

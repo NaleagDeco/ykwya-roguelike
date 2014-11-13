@@ -118,6 +118,10 @@ module YKWYA::UI
     end
 
     def draw_gold!
+      @game.dungeon.hoards.each do |coords|
+        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
+        @main.addch(coords[2].render_by @renderer)
+      end
     end
 
     def draw_stairway!

@@ -23,6 +23,9 @@ module YKWYA
                   # Items
                   'Potion' => 'P',
                   'Gold' => 'G',
+                  'NormalPile' => 'G',
+                  'DragonPile' => 'G',
+                  'SmallPile' => 'G',
                   # Scenery
                   'HorizontalWall' => '-',
                   'VerticalWall' => '|',

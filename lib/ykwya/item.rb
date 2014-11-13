@@ -56,6 +56,12 @@ module YKWYA
   class NormalPile < Gold
   end
 
+  class DragonPile < Gold
+  end
+
+  class SmallPile < Gold
+  end
+
   module PotionFactory
     class << self
       Potion.potion_seed.each do |potion|

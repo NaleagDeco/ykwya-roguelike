@@ -24,7 +24,9 @@ describe "Text-based UI" do
 
   # Items
   glyph_represents 'P', Potion.new(5, :attack)
-  glyph_represents 'G', Gold.new
+  glyph_represents 'G', NormalPile.new
+  glyph_represents 'G', SmallPile.new
+  glyph_represents 'G', DragonPile.new
 
   # Player
   glyph_represents '@', Player.new(0, 0, 0)

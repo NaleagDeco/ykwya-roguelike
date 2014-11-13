@@ -4,8 +4,9 @@ describe 'floor' do
                                       File.dirname(__FILE__))
     @terrain_builder = YKWYA::Builders::DungeonFromIO.new file
     @potion_builder = YKWYA::Builders::NoPotions.new
+    @monster_builder = YKWYA::Builders::NoMonsters.new
 
-    @level = YKWYA::Level.new(@terrain_builder, @potion_builder)
+    @level = YKWYA::Level.new(@terrain_builder, @potion_builder, @monster_builder)
   end
 
   it 'should construct a map from a given file' do

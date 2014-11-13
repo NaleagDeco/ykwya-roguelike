@@ -2,6 +2,7 @@ require_relative 'text-renderer'
 require_relative '../game'
 require_relative '../player'
 require_relative '../action'
+require_relative '../dungeon'
 
 require 'curses'
 require 'frappuccino'
@@ -29,7 +30,7 @@ module YKWYA::UI
       @status = @screen.subwin(5, COLS, 25, 0)
 
       @player = YKWYA::Human.new
-      @game = YKWYA::Game.new(@player, @input_stream)
+      @game = YKWYA::Game.new(@player, YKWYA::Dungeon.new, @input_stream)
 
       loop do
         render!

@@ -83,7 +83,7 @@ module YKWYA
   ##
   # The factory we use to generate monsters. Enemies should not be created
   # directly.
-  class EnemyFactory
+  module EnemyFactory
     class << self
       ##
       # We create monsters by calling a method on the enemy factory named after

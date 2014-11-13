@@ -5,9 +5,9 @@ module YKWYA
 
     attr_reader :dungeon
 
-    def initialize(player, input_stream, builder = nil)
+    def initialize(player, dungeon, input_stream)
       @player = player
-      @dungeon = YKWYA::Dungeon.new builder
+      @dungeon = dungeon
 
       @player_coords = find_empty_space
 

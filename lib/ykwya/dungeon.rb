@@ -32,13 +32,17 @@ module YKWYA
     def potions
       @level.potions
     end
+
+    def monsters
+      @level.monsters
+    end
   end
 
   class Level
     ROWS = 23
     COLS = 77
 
-    attr_reader :map, :potions
+    attr_reader :map, :potions, :monsters
 
     def initialize(terrain_builder, potion_builder, monster_builder)
       @terrain_builder = terrain_builder

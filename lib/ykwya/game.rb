@@ -3,11 +3,45 @@ require_relative 'tile'
 module YKWYA
   class Game
 
-    attr_reader :dungeon
+    attr_reader :map, :potions, :monsters, :hoards
 
-    def initialize(player, dungeon, input_stream)
+    def initialize(player, input_stream, terrain_builder = nil,
+                   potion_builder = nil, monster_builder = nil,
+                   gold_builder = nil)
       @player = player
-      @dungeon = dungeon
+
+      @terrain_builder = terrain_builder ||
+                         YKWYA::Builders::DungeonFromIO.new(
+                           File.open File.expand_path('../../templates/map.txt',
+                                                      File.dirname(__FILE__)))
+      @potion_builder = potion_builder ||
+                        YKWYA::Builders::UniformlyRandomPotions.new(10)
+      @monster_builder = monster_builder ||
+                         YKWYA::Builders::PresuppliedDistributionOfMonsters.new(
+                           20,
+                           YKWYA::Werewolf => 4,
+                           YKWYA::Vampire => 3,
+                           YKWYA::Goblin => 5,
+                           YKWYA::Troll => 2,
+                           YKWYA::Phoenix => 2,
+                           YKWYA::Merchant => 2
+                         )
+      @gold_builder = gold_builder ||
+                       YKWYA::Builders::PresuppliedDistributionOfGold.new(
+                         10,
+                         YKWYA::NormalPile => 5,
+                         YKWYA::DragonPile => 1,
+                         YKWYA::SmallPile => 2
+                       )
+
+      @map = Level.new(@terrain_builder, @potion_builder, @monster_builder,
+                       @gold_builder).map
+      @potions = Level.new(@terrain_builder, @potion_builder, @monster_builder,
+                           @gold_builder).potions
+      @monsters = Level.new(@terrain_builder, @potion_builder,
+                            @monster_builder, @gold_builder).potions
+      @hoards = Level.new(@terrain_builder, @potion_builder,
+                          @monster_builder, @gold_builder).hoards
 
       @player_coords = find_empty_space
       @stairway_coords = find_last_empty_space
@@ -88,17 +122,17 @@ module YKWYA
       new_coords = @player_coords.zip(offset).map do |elem|
         elem.reduce(:+)
       end
-      new_loc = @dungeon.map[[new_coords[0], new_coords[1]]]
+      new_loc = @map[[new_coords[0], new_coords[1]]]
 
       @player_coords = new_coords unless new_loc.inaccessible?
     end
 
     def find_empty_space
-      @dungeon.map.select { |k, v| v == YKWYA::Empty.new }.keys[0]
+      @map.select { |k, v| v == YKWYA::Empty.new }.keys[0]
     end
 
     def find_last_empty_space
-      @dungeon.map.select { |k, v| v == YKWYA::Empty.new }.keys[-1]
+      @map.select { |k, v| v == YKWYA::Empty.new }.keys[-1]
     end
   end
 end

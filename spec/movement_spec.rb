@@ -4,8 +4,7 @@ include YKWYA
 
 describe 'Player' do
   def ensure_moves_n_spaces_right(builder, attempted, expected)
-    dungeon = Dungeon.new builder
-    game = Game.new(Human.new, dungeon, Frappuccino::Stream.new)
+    game = Game.new(Human.new, Frappuccino::Stream.new, builder)
     old_coords = game.player_coords
     attempted.times do
       game.player_right!

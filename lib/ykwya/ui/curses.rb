@@ -30,7 +30,7 @@ module YKWYA::UI
       @status = @screen.subwin(5, COLS, 25, 0)
 
       @player = YKWYA::Human.new
-      @game = YKWYA::Game.new(@player, YKWYA::Dungeon.new, @input_stream)
+      @game = YKWYA::Game.new(@player, @input_stream)
 
       loop do
         render!
@@ -104,21 +104,21 @@ module YKWYA::UI
     end
 
     def draw_map!
-      @game.dungeon.map.each_pair do |coords, tile|
+      @game.map.each_pair do |coords, tile|
         @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
         @main.addch(tile.render_by @renderer)
       end
     end
 
     def draw_enemies!
-      @game.dungeon.monsters.each do |coords|
+      @game.monsters.each do |coords|
         @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
         @main.addch(coords[2].render_by @renderer)
       end
     end
 
     def draw_gold!
-      @game.dungeon.hoards.each do |coords|
+      @game.hoards.each do |coords|
         @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
         @main.addch(coords[2].render_by @renderer)
       end
@@ -135,7 +135,7 @@ module YKWYA::UI
     end
 
     def draw_potions!
-      @game.dungeon.potions.each do |coords|
+      @game.potions.each do |coords|
         @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
         @main.addch(coords[2].render_by @renderer)
       end

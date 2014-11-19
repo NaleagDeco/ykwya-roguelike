@@ -2,7 +2,6 @@ require_relative 'text-renderer'
 require_relative '../game'
 require_relative '../player'
 require_relative '../action'
-require_relative '../dungeon'
 
 require 'curses'
 require 'frappuccino'
@@ -12,6 +11,7 @@ include Curses
 module YKWYA::UI
   class CursesUI
     COLS = 79
+    ROWS = 30
     OFFSETX = 1
     OFFSETY = 1
 

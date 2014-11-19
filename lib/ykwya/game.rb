@@ -34,14 +34,10 @@ module YKWYA
                          YKWYA::SmallPile => 2
                        )
 
-      @map = Level.new(@terrain_builder, @potion_builder, @monster_builder,
-                       @gold_builder).map
-      @potions = Level.new(@terrain_builder, @potion_builder, @monster_builder,
-                           @gold_builder).potions
-      @monsters = Level.new(@terrain_builder, @potion_builder,
-                            @monster_builder, @gold_builder).potions
-      @hoards = Level.new(@terrain_builder, @potion_builder,
-                          @monster_builder, @gold_builder).hoards
+      @map = @terrain_builder.build_dungeon
+      @potions = initialize_potions
+      @monsters = initialize_monsters
+      @hoards = initialize_hoards
 
       @player_coords = find_empty_space
       @stairway_coords = find_last_empty_space
@@ -133,6 +129,36 @@ module YKWYA
 
     def find_last_empty_space
       @map.select { |k, v| v == YKWYA::Empty.new }.keys[-1]
+    end
+
+    def initialize_potions
+      potions = @potion_builder.build_potions
+      potion_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
+                      .keys.sample(potions.size)
+
+      potion_spaces.zip(potions).map do |elem|
+        elem[0].clone << elem[1]
+      end
+    end
+
+    def initialize_monsters
+      monsters = @monster_builder.build_monsters
+      monster_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
+                       .keys.sample(monsters.size)
+
+      monster_spaces.zip(monsters).map do |elem|
+        elem[0].clone << elem[1]
+      end
+    end
+
+    def initialize_hoards
+      gold = @gold_builder.build_gold
+      gold_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
+                    .keys.sample(gold.size)
+
+      gold_spaces.zip(gold).map do |elem|
+        elem[0].clone << elem[1]
+      end
     end
   end
 end

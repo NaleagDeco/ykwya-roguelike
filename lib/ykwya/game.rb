@@ -2,6 +2,10 @@ require_relative 'tile'
 
 module YKWYA
   class Game
+    DIRECTIONS = [[-1, -1], [-1, 0], [-1, 1],
+                  [0, -1], [0, 0], [0, 1],
+                  [1, -1], [1, 0], [1, 1]]
+
 
     attr_reader :map, :potions, :monsters, :hoards
 
@@ -66,6 +70,9 @@ module YKWYA
       input_stream
         .select { |event| event == :move_upright }
         .on_value { |_| player_upright! }
+      input_stream
+        .select { |event| event == :tick }
+        .on_value { |_| tick! }
     end
 
     def is_over?
@@ -112,6 +119,16 @@ module YKWYA
       player_move! [1, 1]
     end
 
+    def tick!
+      @monsters.map! do |monster|
+        new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
+          coords.inject(:+)
+        end until @map[new_coords] == YKWYA::Empty.new
+
+        [new_coords, monster[1]]
+      end
+    end
+
     private
 
     def player_move!(offset)
@@ -136,9 +153,7 @@ module YKWYA
       potion_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
                       .keys.sample(potions.size)
 
-      potion_spaces.zip(potions).map do |elem|
-        elem[0].clone << elem[1]
-      end
+      potion_spaces.zip(potions).map
     end
 
     def initialize_monsters
@@ -146,9 +161,7 @@ module YKWYA
       monster_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
                        .keys.sample(monsters.size)
 
-      monster_spaces.zip(monsters).map do |elem|
-        elem[0].clone << elem[1]
-      end
+      monster_spaces.zip(monsters)
     end
 
     def initialize_hoards
@@ -156,9 +169,7 @@ module YKWYA
       gold_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
                     .keys.sample(gold.size)
 
-      gold_spaces.zip(gold).map do |elem|
-        elem[0].clone << elem[1]
-      end
+      gold_spaces.zip(gold)
     end
   end
 end

@@ -43,7 +43,6 @@ module YKWYA::UI
         end
         execute_command! input_char
       end
-
       close_screen
     end
 
@@ -65,6 +64,8 @@ module YKWYA::UI
         YKWYA::Action.instance.move_downleft!
       when 'n'
         YKWYA::Action.instance.move_downright!
+      when 'w'
+        YKWYA::Action.instance.wait!
       end
     end
 
@@ -76,10 +77,10 @@ module YKWYA::UI
     def render_main_screen!
       @main.clear
       draw_map!
-      draw_enemies!
       draw_gold!
       draw_potions!
       draw_stairway!
+      draw_enemies!
       draw_player!
       @main.refresh
     end
@@ -112,15 +113,15 @@ module YKWYA::UI
 
     def draw_enemies!
       @game.monsters.each do |coords|
-        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
-        @main.addch(coords[2].render_by @renderer)
+        @main.setpos(coords[0][0] + OFFSETY, coords[0][1] + OFFSETX)
+        @main.addch(coords[1].render_by @renderer)
       end
     end
 
     def draw_gold!
       @game.hoards.each do |coords|
-        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
-        @main.addch(coords[2].render_by @renderer)
+        @main.setpos(coords[0][0] + OFFSETY, coords[0][1] + OFFSETX)
+        @main.addch(coords[1].render_by @renderer)
       end
     end
 
@@ -136,8 +137,8 @@ module YKWYA::UI
 
     def draw_potions!
       @game.potions.each do |coords|
-        @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
-        @main.addch(coords[2].render_by @renderer)
+        @main.setpos(coords[0][0] + OFFSETY, coords[0][1] + OFFSETX)
+        @main.addch(coords[1].render_by @renderer)
       end
     end
 

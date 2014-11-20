@@ -8,11 +8,12 @@ gem 'frappuccino'
 
 group :development do
   gem 'pry'
+  gem 'pry-rescue'
+  gem 'pry-byebug'
 end
 
 group :test do
   gem "rspec"
   gem "cucumber"
   gem "aruba"
-  gem 'pry-rescue'
 end

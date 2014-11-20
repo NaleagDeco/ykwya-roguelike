@@ -5,6 +5,7 @@ require_relative '../action'
 
 require 'curses'
 require 'frappuccino'
+require 'pry'
 
 include Curses
 
@@ -18,6 +19,14 @@ module YKWYA::UI
     def initialize
       @renderer = TextRenderer.new
       @input_stream = Frappuccino::Stream.new(YKWYA::Action.instance)
+
+      Pry.config.hooks.add_hook(:before_session, :disable_curses) do
+        close_screen
+      end
+
+      Pry.config.hooks.add_hook(:after_session, :enable_curses) do
+        doupdate
+      end
     end
 
     def run!
@@ -143,14 +152,6 @@ module YKWYA::UI
     end
 
     private
-
-    def breakpoint
-      require 'pry'
-
-      close_screen
-      binding.pry
-      doupdate
-    end
 
     def map_to_curses(coords)
       coords.map { |coord| coord + 1 }

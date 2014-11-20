@@ -41,6 +41,9 @@ module YKWYA::UI
       @player = YKWYA::Human.new
       @game = YKWYA::Game.new(@player, @input_stream)
 
+      @message = Frappuccino::Property.new('Welcome to YKWYA!',
+                                           @game.streams[:message])
+
       loop do
         render!
         input_char = @screen.getch
@@ -48,7 +51,7 @@ module YKWYA::UI
           @status.clear
           @status.setpos(@status.begy, @status.begx)
           @status << "Do you really want to quit? (Y/N)"
-          break if (@status.getch == 'y')
+          break if @status.getch == 'y'
         end
         execute_command! input_char
       end
@@ -99,10 +102,10 @@ module YKWYA::UI
     def render_status!
       line1_left = "Race: #{@player.race} Gold: #{@player.gold}"
       line1_right = "Floor 1"
-      line2 = "HP: #{@player.hitpoints} \n"
-      line3 = "Atk: #{@player.attack} \n"
-      line4 = "Def: #{@player.defense} \n"
-      line5 = "Action:\n"
+      line2 = "HP: #{@player.hitpoints}\n"
+      line3 = "Atk: #{@player.attack}\n"
+      line4 = "Def: #{@player.defense}\n"
+      line5 = "Action: #{@message.now}\n"
 
       @status.clear
       @status << line1_left +

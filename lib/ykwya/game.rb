@@ -7,7 +7,7 @@ module YKWYA
                   [1, -1], [1, 0], [1, 1]]
 
 
-    attr_reader :map, :potions, :monsters, :hoards
+    attr_reader :map, :potions, :monsters, :hoards, :streams
 
     def initialize(player, input_stream, terrain_builder = nil,
                    potion_builder = nil, monster_builder = nil,
@@ -45,6 +45,10 @@ module YKWYA
 
       @player_coords = find_empty_space
       @stairway_coords = find_last_empty_space
+
+      @streams = {
+        :message => Frappuccino::Stream.new(self)
+      }
 
       input_stream
         .select { |event| event == :move_left }
@@ -137,7 +141,11 @@ module YKWYA
       end
       new_loc = @map[[new_coords[0], new_coords[1]]]
 
-      @player_coords = new_coords unless new_loc.inaccessible?
+      if new_loc.inaccessible?
+        emit "Player cannot go there!"
+      else
+        @player_coords = new_coords
+      end
     end
 
     def find_empty_space

@@ -39,16 +39,8 @@ module YKWYA
     include GamePieceMixin
     include RoomMixin
 
-    def initialize(open = true)
-      @open = open
-    end
-
-    def open?
-      @open
-    end
-
     def inaccessible?
-      !@open
+      false
     end
   end
 

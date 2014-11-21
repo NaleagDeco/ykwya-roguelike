@@ -127,7 +127,7 @@ module YKWYA
       @monsters.map! do |monster|
         new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
           coords.inject(:+)
-        end until @map[new_coords] == YKWYA::Empty.new
+        end while @map[new_coords].inaccessible?
 
         [new_coords, monster[1]]
       end

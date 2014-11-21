@@ -37,9 +37,7 @@ module YKWYA
         when '.'
           Empty.new
         when '+'
-          Door.new(false)
-        when '*'
-          Door.new(true)
+          Door.new
         else
           Inaccessible.new
         end

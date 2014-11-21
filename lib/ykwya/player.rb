@@ -3,6 +3,7 @@ require_relative 'game-piece'
 module YKWYA
   class Player
     include GamePieceMixin
+    include Fightable
 
     ## Current hitpoints
     attr_reader :hitpoints

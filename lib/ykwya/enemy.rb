@@ -5,6 +5,7 @@ module YKWYA
   # Killable and (usually) hostile creatures.
   class Enemy
     include GamePieceMixin
+    include Fighter
 
     ##
     # A list of seeded enemies, defined in the following format:
@@ -57,12 +58,6 @@ module YKWYA
     # Is the monster dead?
     def dead?
       @hitpoints <= 0
-    end
-
-    ##
-    # Callback to indicate that this monster was attacked by a player
-    def attacked_by player
-      @hitpoints =- 1
     end
 
     ##

@@ -47,7 +47,7 @@ module YKWYA
       @stairway_coords = find_last_empty_space
 
       @streams = {
-        :message => Frappuccino::Stream.new(self)
+        message: Frappuccino::Stream.new(self, @player)
       }
 
       input_stream
@@ -124,13 +124,22 @@ module YKWYA
     end
 
     def tick!
-      @monsters.map! do |monster|
+      attacking = @monsters.select do |monster|
+        neighbourhood(monster[0]).include? @player_coords
+      end
+      moving = @monsters - attacking
+
+      attacking.each { |monster| monster[1].fight @player }
+
+      moving.map! do |monster|
         new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
           coords.inject(:+)
         end while @map[new_coords].inaccessible?
 
         [new_coords, monster[1]]
       end
+
+      @monsters = attacking + moving
     end
 
     def neighbourhood(coord)

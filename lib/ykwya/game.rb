@@ -133,6 +133,16 @@ module YKWYA
       end
     end
 
+    def neighbourhood(coord)
+      offsets = [-1, 0, 1]
+
+      neighbourhood = offsets.repeated_permutation(2).map do |offset|
+        coord.zip(offset).map { |elem| elem.inject(:+) }
+      end
+
+      neighbourhood - [coord]
+    end
+
     private
 
     def player_move!(offset)

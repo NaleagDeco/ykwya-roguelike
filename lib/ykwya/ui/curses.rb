@@ -53,7 +53,7 @@ module YKWYA::UI
           @status << "Do you really want to quit? (Y/N)"
           break if @status.getch == 'y'
         end
-        execute_command! input_char
+        execute_command! input_char unless @player.dead?
       end
       close_screen
     end

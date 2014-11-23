@@ -140,6 +140,8 @@ module YKWYA
       end
 
       @monsters = attacking + moving
+
+      emit 'You are dead!' if @player.dead?
     end
 
     def neighbourhood(coord)

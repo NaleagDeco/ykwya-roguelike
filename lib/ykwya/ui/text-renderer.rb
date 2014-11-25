@@ -1,3 +1,5 @@
+require_relative '../player'
+
 module YKWYA
   ##
   # Renderers for the game
@@ -47,7 +49,11 @@ module YKWYA
       end
 
       def name(object)
-        object.class.name.split('::').last
+        if object.is_a? YKWYA::Player
+          "Player"
+        else
+          object.class.name.split('::').last
+        end
       end
     end
   end

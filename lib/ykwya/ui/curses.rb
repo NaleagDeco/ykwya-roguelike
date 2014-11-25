@@ -41,8 +41,24 @@ module YKWYA::UI
       @player = YKWYA::Human.new
       @game = YKWYA::Game.new(@player, @input_stream)
 
-      @message = Frappuccino::Property.new('Welcome to YKWYA!',
-                                           @game.streams[:message])
+      @message = Frappuccino::Property.new(YKWYA::Event.new(:gamestarted, nil),
+                                           @game.streams[:message]).map do |event|
+        case event.type
+        when :gamestarted
+          'Welcome to YKWYA!'
+        when :attack
+          result = event.data
+          attacker = @renderer.name result[0]
+          defender = @renderer.name result[1]
+          if result[2] == :missed
+            "#{attacker} missed when attacking #{defender}!"
+          else
+            "#{attacker} attacked #{defender} for #{result[2]} damage!"
+          end
+        when :playerdead
+          'You are dead!'
+        end
+      end
 
       loop do
         render!

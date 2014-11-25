@@ -4,6 +4,7 @@ module YKWYA
   class Player
     include GamePieceMixin
     include Fightable
+    include Fighter
 
     ## Current hitpoints
     attr_reader :hitpoints
@@ -38,8 +39,8 @@ module YKWYA
       instance_variable_set(p.attribute, new_attr_val)
     end
 
-    def fight monster
-      monster.attacked_by self
+    def fight(monster)
+      super monster
       self.gain_gold monster.hoard if monster.dead?
     end
 

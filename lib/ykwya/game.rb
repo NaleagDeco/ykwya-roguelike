@@ -1,4 +1,5 @@
 require_relative 'tile'
+require_relative 'event'
 
 module YKWYA
   class Game
@@ -47,7 +48,7 @@ module YKWYA
       @stairway_coords = find_last_empty_space
 
       @streams = {
-        message: Frappuccino::Stream.new(self, @player)
+        message: Frappuccino::Stream.new(self)
       }
 
       input_stream
@@ -129,7 +130,9 @@ module YKWYA
       end
       moving = @monsters - attacking
 
-      attacking.each { |monster| monster[1].fight @player }
+      attacking.each do |monster|
+        emit Event.new(:attack, monster[1].fight(@player))
+      end
 
       moving.map! do |monster|
         new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
@@ -141,7 +144,7 @@ module YKWYA
 
       @monsters = attacking + moving
 
-      emit 'You are dead!' if @player.dead?
+      emit Event.new(:playerdead, nil) if @player.dead?
     end
 
     def neighbourhood(coord)
@@ -163,7 +166,7 @@ module YKWYA
       new_loc = @map[[new_coords[0], new_coords[1]]]
 
       if new_loc.inaccessible?
-        emit "Player cannot go there!"
+        emit Event.new(:inaccessible, nil)
       else
         @player_coords = new_coords
       end

@@ -13,6 +13,8 @@ module YKWYA
   end
 
   module Fighter
+    ##
+    # Returns [attacker, defender, damage/:missed]
     def fight(enemy)
       enemy.fought_by self
     end
@@ -21,15 +23,18 @@ module YKWYA
   module Fightable
     ##
     # Callback to indicate that this monster was attacked by a player
+    #
+    # Returns [attacker, defender, :missed]
     def fought_by(belligerent)
-      damage = ((100.0 / (100.0 + defense)) * belligerent.attack).ceil
-
+      # 50% chance of attack missing
       if rand(2) == 1
-        @hitpoints -=  damage
-        emit "Player was attacked by #{belligerent} for #{damage} damage!"
+        damage = ((100.0 / (100.0 + defense)) * belligerent.attack).ceil
+        @hitpoints -= damage
       else
-        emit "#{belligerent} misses!"
+        damage = :missed
       end
+
+      [belligerent, self, damage]
     end
   end
 end

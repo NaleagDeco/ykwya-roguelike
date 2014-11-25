@@ -18,4 +18,12 @@ describe 'Game' do
 
     expect(@game.neighbourhood coord).to eq(expected)
   end
+
+  it "won't lose any monsters as part of the world tick" do
+    old_monsters = @game.monsters.clone
+    @game.tick!
+    new_monsters = @game.monsters.clone
+
+    expect(old_monsters.size).to eq(new_monsters.size)
+  end
 end

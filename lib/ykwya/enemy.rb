@@ -6,6 +6,7 @@ module YKWYA
   class Enemy
     include GamePieceMixin
     include Fighter
+    include Fightable
 
     ##
     # A list of seeded enemies, defined in the following format:
@@ -98,8 +99,8 @@ module YKWYA
       $hostile
     end
 
-    def attacked_by player
-      super player
+    def fought_by(belligerent)
+      super belligerent
       $hostile = true
     end
 

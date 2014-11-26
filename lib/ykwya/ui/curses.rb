@@ -41,23 +41,21 @@ module YKWYA::UI
       @player = YKWYA::Human.new
       @game = YKWYA::Game.new(@player, @input_stream)
 
-      @message = Frappuccino::Property.new(YKWYA::Event.new(:gamestarted, nil),
-                                           @game.streams[:message]).map do |event|
-        case event.type
-        when :gamestarted
-          'Welcome to YKWYA!'
-        when :attack
-          result = event.data
-          attacker = @renderer.name result[0]
-          defender = @renderer.name result[1]
-          if result[2] == :missed
-            "#{attacker} missed when attacking #{defender}!"
-          else
-            "#{attacker} attacked #{defender} for #{result[2]} damage!"
-          end
-        when :playerdead
-          'You are dead!'
-        end
+      @message = @game.streams[:message].on_value do |event|
+        string = case event.type
+                 when :attack
+                   result = event.data
+                   attacker = @renderer.name result[0]
+                   defender = @renderer.name result[1]
+                   if result[2] == :missed
+                     "#{attacker} missed when attacking #{defender}!"
+                   else
+                     "#{attacker} attacked #{defender} for #{result[2]} damage!"
+                   end
+                 when :playerdead
+                   'You are dead!'
+                 end
+        action_message! string
       end
 
       loop do
@@ -121,7 +119,7 @@ module YKWYA::UI
       line2 = "HP: #{@player.hitpoints}\n"
       line3 = "Atk: #{@player.attack}\n"
       line4 = "Def: #{@player.defense}\n"
-      line5 = "Action: #{@message.now}\n"
+      line5 = "Action: "
 
       @status.clear
       @status << line1_left +
@@ -156,6 +154,21 @@ module YKWYA::UI
     def draw_player!
       @main.setpos(*(map_to_curses @game.player_coords))
       @main.addch(@player.render_by(@renderer))
+    end
+
+    def action_message! string
+      offset = [4, 'Action: '.length]
+
+      @status.setpos(*offset)
+      @status << string
+      @status.refresh
+      sleep 1
+      @status << ' --Press Any Key --'
+      @status.refresh
+      @status.getch
+      @status.setpos(*offset)
+      @status.clrtoeol
+      @status.refresh
     end
 
     def map_to_curses(coords)

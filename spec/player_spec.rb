@@ -3,10 +3,6 @@ require 'spec_helper'
 include YKWYA
 
 describe 'Player' do
-  it "should print itself out as an '@'" do
-    expect(Player.new(0,0,0).to_s).to eq('@')
-  end
-
   it 'is dead when hitpoints are 0' do
     player = Player.new(0,0,0)
     expect(player.dead?).to be(true)

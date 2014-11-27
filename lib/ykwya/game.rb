@@ -125,6 +125,8 @@ module YKWYA
     end
 
     def tick!
+      @monsters.delete_if { |monster| monster[1].dead? }
+
       attacking = @monsters.select do |monster|
         neighbourhood(monster[0]).include? @player_coords
       end
@@ -133,6 +135,8 @@ module YKWYA
       attacking.each do |monster|
         emit Event.new(:attack, monster[1].fight(@player))
       end
+
+      emit Event.new(:playerdead, nil) if @player.dead?
 
       moving.map! do |monster|
         new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
@@ -143,8 +147,6 @@ module YKWYA
       end
 
       @monsters = attacking + moving
-
-      emit Event.new(:playerdead, nil) if @player.dead?
     end
 
     def neighbourhood(coord)

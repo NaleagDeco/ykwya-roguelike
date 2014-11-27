@@ -22,18 +22,14 @@ module YKWYA
       @gold = 0
     end
 
-    def dead?
-      @hitpoints <= 0
-    end
-
-    def gain_gold gp
+    def gain_gold(gp)
       @gold += gp
     end
 
     ##
     # Drink a potion.
     #
-    def quaff p
+    def quaff(p)
       new_attr_val = instance_variable_get(p.attribute) + p.magnitude
       new_attr_val = [0, new_attr_val].max
       instance_variable_set(p.attribute, new_attr_val)
@@ -43,10 +39,6 @@ module YKWYA
       fight_result = super monster
       self.gain_gold monster.hoard if monster.dead?
       fight_result
-    end
-
-    def to_s
-      '@'
     end
 
     def race
@@ -61,7 +53,7 @@ module YKWYA
       super(180, 30, 25)
     end
 
-    def gain_gold gp
+    def gain_gold(gp)
       @gold += (gp / 2)
     end
   end
@@ -81,7 +73,7 @@ module YKWYA
       super(100, 20, 30)
     end
 
-    def gain_gold gp
+    def gain_gold(gp)
       @gold += (2 * gp)
     end
   end
@@ -93,7 +85,7 @@ module YKWYA
       super(140, 30, 10)
     end
 
-    def quaff p
+    def quaff(p)
       super(Potion.new(p.magnitude.abs, p.attribute))
     end
   end

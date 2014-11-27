@@ -14,13 +14,13 @@ module YKWYA
     # [<name>. <glyph>, <starting hitpoints>, <starting attack strength>,
     # <starting defense strength>]
     def self.enemy_seed
-      [['vampire', 'V', 50, 25, 25],
-       ['werewolf', 'W', 120, 30, 5],
-       ['troll', 'T', 120, 25, 15],
-       ['goblin', 'N', 70, 5, 10],
-       ['merchant', 'M', 30, 70, 5],
-       ['dragon', 'D', 150, 20, 20],
-       ['phoenix', 'X', 50, 35, 20]]
+      [['vampire', 50, 25, 25],
+       ['werewolf', 120, 30, 5],
+       ['troll', 120, 25, 15],
+       ['goblin', 70, 5, 10],
+       ['merchant', 30, 70, 5],
+       ['dragon', 150, 20, 20],
+       ['phoenix', 50, 35, 20]]
     end
 
     ##
@@ -56,12 +56,6 @@ module YKWYA
     end
 
     ##
-    # Is the monster dead?
-    def dead?
-      @hitpoints <= 0
-    end
-
-    ##
     # The amount of gold this monster gives off when killed
     def hoard
       1
@@ -72,7 +66,7 @@ module YKWYA
   # We generate a new class for every seed enemy in our array,
   # with the supplied name and starting stats.
   Enemy.enemy_seed.each do |enemy|
-    klass = Enemy.new_class enemy[2], enemy[3], enemy[4]
+    klass = Enemy.new_class enemy[1], enemy[2], enemy[3]
     const_set(enemy[0].capitalize, klass)
   end
 

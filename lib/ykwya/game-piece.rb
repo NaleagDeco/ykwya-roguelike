@@ -30,11 +30,18 @@ module YKWYA
       if rand(2) == 1
         damage = ((100.0 / (100.0 + defense)) * belligerent.attack).ceil
         @hitpoints -= damage
+        damage = :defeated if dead?
       else
         damage = :missed
       end
 
       [belligerent, self, damage]
+    end
+
+    ##
+    # Am I dead?
+    def dead?
+      @hitpoints <= 0
     end
   end
 end

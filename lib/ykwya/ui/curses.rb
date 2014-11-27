@@ -49,6 +49,8 @@ module YKWYA::UI
                    defender = @renderer.name result[1]
                    if result[2] == :missed
                      "#{attacker} missed when attacking #{defender}!"
+                   elsif result[2] == :defeated
+                     "#{attacker} defeated #{defender}!"
                    else
                      "#{attacker} attacked #{defender} for #{result[2]} damage!"
                    end
@@ -162,7 +164,7 @@ module YKWYA::UI
       @status.setpos(*offset)
       @status << string
       @status.refresh
-      sleep 1
+      sleep 0.25
       @status << ' --Press Any Key --'
       @status.refresh
       @status.getch

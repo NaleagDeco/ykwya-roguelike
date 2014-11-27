@@ -54,14 +54,13 @@ module YKWYA::UI
                    else
                      "#{attacker} attacked #{defender} for #{result[2]} damage!"
                    end
-                 when :playerdead
-                   'You are dead!'
                  end
         action_message! string
       end
 
       loop do
         render!
+        action_message!('You are dead :(', false) if @player.dead?
         input_char = @screen.getch
         if input_char == 'q'
           @status.clear
@@ -158,19 +157,22 @@ module YKWYA::UI
       @main.addch(@player.render_by(@renderer))
     end
 
-    def action_message! string
+    def action_message!(string, prompt = true)
       offset = [4, 'Action: '.length]
 
       @status.setpos(*offset)
+      @status.clrtoeol
       @status << string
       @status.refresh
-      sleep 0.25
-      @status << ' --Press Any Key --'
-      @status.refresh
-      @status.getch
-      @status.setpos(*offset)
-      @status.clrtoeol
-      @status.refresh
+      if prompt
+        sleep 0.25
+        @status << ' --Press Any Key --'
+        @status.refresh
+        @status.getch
+        @status.setpos(*offset)
+        @status.clrtoeol
+        @status.refresh
+      end
     end
 
     def map_to_curses(coords)

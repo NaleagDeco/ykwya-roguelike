@@ -40,8 +40,9 @@ module YKWYA
     end
 
     def fight(monster)
-      super monster
+      fight_result = super monster
       self.gain_gold monster.hoard if monster.dead?
+      fight_result
     end
 
     def to_s

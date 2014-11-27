@@ -163,8 +163,17 @@ module YKWYA
       new_coords = @player_coords.zip(offset).map do |elem|
         elem.reduce(:+)
       end
-      new_loc = @map[[new_coords[0], new_coords[1]]]
 
+      adjacent_monster = @monsters.find do |monster|
+        new_coords == monster[0]
+      end
+      if adjacent_monster
+        fight_result = @player.fight(adjacent_monster[1])
+        emit Event.new(:attack, fight_result)
+        return
+      end
+
+      new_loc = @map[[new_coords[0], new_coords[1]]]
       if new_loc.inaccessible?
         emit Event.new(:inaccessible, nil)
       else

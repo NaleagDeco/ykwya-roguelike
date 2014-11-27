@@ -41,21 +41,23 @@ module YKWYA::UI
       @player = YKWYA::Human.new
       @game = YKWYA::Game.new(@player, @input_stream)
 
-      @message = @game.streams[:message].on_value do |event|
-        string = case event.type
-                 when :attack
-                   result = event.data
-                   attacker = @renderer.name result[0]
-                   defender = @renderer.name result[1]
-                   if result[2] == :missed
-                     "#{attacker} missed when attacking #{defender}!"
-                   elsif result[2] == :defeated
-                     "#{attacker} defeated #{defender}!"
-                   else
-                     "#{attacker} attacked #{defender} for #{result[2]} damage!"
-                   end
-                 end
-        action_message! string
+      @attack_stream = @game.streams[:message].select do |event|
+        event.type == :attack
+      end
+      @attack_stream.on_value do |event|
+        action_message! case event.type
+                        when :attack
+                          result = event.data
+                          attacker = @renderer.name result[0]
+                          defender = @renderer.name result[1]
+                          if result[2] == :missed
+                            "#{attacker} missed when attacking #{defender}!"
+                          elsif result[2] == :defeated
+                            "#{attacker} defeated #{defender}!"
+                          else
+                            "#{attacker} attacked #{defender} for #{result[2]} damage!"
+                          end
+                        end
       end
 
       loop do

@@ -23,5 +23,15 @@ module YKWYA
         []
       end
     end
+
+    class PotionsFromList
+      def initialize(list)
+        @seed_list = list.clone
+      end
+
+      def build_potions
+        @seed_list.clone
+      end
+    end
   end
 end

@@ -180,6 +180,25 @@ module YKWYA
         emit Event.new(:inaccessible, nil)
       else
         @player_coords = new_coords
+
+
+        p_idx = @potions.find_index do |potion|
+          @player_coords == potion[0]
+        end
+        if p_idx
+          @player.quaff @potions[p_idx][1]
+          emit Event.new(:quaffed, @potions[p_idx][1])
+          @potions.delete_at p_idx
+        end
+
+        g_idx = @hoards.find_index do |hoard|
+          @player_coords == hoard[0]
+        end
+        if g_idx
+          true_gain = @player.gain_gold(@hoards[g_idx][1].class.amount)
+          emit Event.new(:goldpicked, true_gain)
+          @hoards.delete_at g_idx
+        end
       end
     end
 
@@ -196,7 +215,7 @@ module YKWYA
       potion_spaces = @map.select { |coord, room| room == YKWYA::Empty.new }
                       .keys.sample(potions.size)
 
-      potion_spaces.zip(potions).map
+      potion_spaces.zip(potions)
     end
 
     def initialize_monsters

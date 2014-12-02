@@ -23,7 +23,9 @@ module YKWYA
     end
 
     def gain_gold(gp)
-      @gold += gp
+      true_gain = gain_gold_impl gp
+      @gold += true_gain
+      true_gain
     end
 
     ##
@@ -44,6 +46,12 @@ module YKWYA
     def race
       self.class.name.split('::').last
     end
+
+    private
+
+    def gain_gold_impl(gp)
+      gp
+    end
   end
 
   ##
@@ -53,8 +61,8 @@ module YKWYA
       super(180, 30, 25)
     end
 
-    def gain_gold(gp)
-      @gold += (gp / 2)
+    def gain_gold_impl(gp)
+      gp / 2
     end
   end
 
@@ -73,8 +81,10 @@ module YKWYA
       super(100, 20, 30)
     end
 
-    def gain_gold(gp)
-      @gold += (2 * gp)
+    private
+
+    def gain_gold_impl(gp)
+      2 * gp
     end
   end
 

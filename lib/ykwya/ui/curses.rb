@@ -42,7 +42,7 @@ module YKWYA::UI
       @game = YKWYA::Game.new(@player, @input_stream)
 
       @attack_stream = @game.streams[:message].select do |event|
-        event.type == :attack
+        event.type == :attack || event.type == :quaffed || event.type == :goldpicked
       end
       @attack_stream.on_value do |event|
         action_message! case event.type
@@ -57,6 +57,10 @@ module YKWYA::UI
                           else
                             "#{attacker} attacked #{defender} for #{result[2]} damage!"
                           end
+                        when :quaffed
+                          "Player modified #{event.data.attribute.to_s.capitalize} by #{event.data.magnitude}!"
+                        when :goldpicked
+                          "Player picked up #{event.data} gold!"
                         end
       end
 

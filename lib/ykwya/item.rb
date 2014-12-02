@@ -51,15 +51,26 @@ module YKWYA
 
   class Gold
     include GamePieceMixin
+
+    class << self
+      attr_reader :amount
+    end
   end
 
   class NormalPile < Gold
+    @amount = 1
   end
 
   class DragonPile < Gold
+    @amount = 8
+  end
+
+  class MerchantPile < Gold
+    @amount = 4
   end
 
   class SmallPile < Gold
+    @amount = 2
   end
 
   module PotionFactory

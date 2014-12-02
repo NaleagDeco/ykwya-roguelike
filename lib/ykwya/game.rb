@@ -3,6 +3,10 @@ require_relative 'event'
 
 module YKWYA
   module Game
+    DIRECTIONS = [[-1, -1], [-1, 0], [-1, 1],
+                  [0, -1], [0, 0], [0, 1],
+                  [1, -1], [1, 0], [1, 1]]
+
     def create_game(player, **builders)
       terrain_builder = builders[:terrain] ||
                         YKWYA::Builders::DungeonFromIO.new(
@@ -47,7 +51,49 @@ module YKWYA
         gold: empty_terrain.pop(unplaced_gold.size).zip(unplaced_gold)
       }
     end
+
+    def neighbourhood(coord)
+      offsets = [-1, 0, 1]
+
+      neighbourhood = offsets.repeated_permutation(2).map do |offset|
+        coord.zip(offset).map { |elem| elem.inject(:+) }
+      end
+
+      neighbourhood - [coord]
+    end
+
+    def tick_world(game_state)
+      player = game_state[:player].clone
+      monsters = game_state[:monsters].select { |monster| !monster.dead? }
+      attacking = monsters.select do |monster|
+        neighbourhood(monster[0]).include? @player_coords
+      end
+      moving = monsters - attacking
+
+      attacking.each do |monster|
+        monster[1].fight game_state[:player]
+      end
+
+      moving.map! do |monster|
+        new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
+          coords.inject(:+)
+        end while @map[new_coords].inaccessible?
+
+        [new_coords, monster[1]]
+      end
+
+      {
+        player: player,
+        terrain: game_state[:terrain].clone,
+        player_coords: game_state[:player_coords].clone,
+        stairway_coords: game_state[:stairway_coords].clone,
+        potions: game_state[:potions].clone,
+        monsters: game_state[:monsters],
+        gold: game_state[:gold]
+      }
+    end
   end
+
   class Game
     DIRECTIONS = [[-1, -1], [-1, 0], [-1, 1],
                   [0, -1], [0, 0], [0, 1],

@@ -2,6 +2,52 @@ require_relative 'tile'
 require_relative 'event'
 
 module YKWYA
+  module Game
+    def create_game(player, **builders)
+      terrain_builder = builders[:terrain] ||
+                        YKWYA::Builders::DungeonFromIO.new(
+                          File.open File.expand_path('../../templates/map.txt',
+                                                     File.dirname(__FILE__)))
+      potion_builder = builders[:potion] ||
+                       YKWYA::Builders::UniformlyRandomPotions.new(10)
+      monster_builder = monster_builder ||
+                        YKWYA::Builders::PresuppliedDistributionOfMonsters.new(
+                          20,
+                          YKWYA::Werewolf => 4,
+                          YKWYA::Vampire => 3,
+                          YKWYA::Goblin => 5,
+                          YKWYA::Troll => 2,
+                          YKWYA::Phoenix => 2,
+                          YKWYA::Merchant => 2
+                        )
+      gold_builder = builders[:gold] ||
+                     YKWYA::Builders::PresuppliedDistributionOfGold.new(
+                       10,
+                       YKWYA::NormalPile => 5,
+                       YKWYA::DragonPile => 1,
+                       YKWYA::SmallPile => 2
+                     )
+      terrain = terrain_builder.build_dungeon
+      unplaced_monsters = monster_builder.build_monsters
+      unplaced_potions = potion_builder.build_potions
+      unplaced_gold = gold_builder.build_gold
+      # Shuffle to enable random placement
+      empty_terrain = terrain.select { |coords, tile| tile.is_a? YKWYA::Empty }
+                      .keys.shuffle
+
+      {
+        player: player.clone,
+        terrain: terrain,
+        player_coords: empty_terrain.pop,
+        stairway_coords: empty_terrain.pop,
+        potions: empty_terrain.pop(unplaced_potions.size)
+          .zip(unplaced_potions),
+        monsters: empty_terrain.pop(unplaced_monsters.size)
+          .zip(unplaced_monsters),
+        gold: empty_terrain.pop(unplaced_gold.size).zip(unplaced_gold)
+      }
+    end
+  end
   class Game
     DIRECTIONS = [[-1, -1], [-1, 0], [-1, 1],
                   [0, -1], [0, 0], [0, 1],

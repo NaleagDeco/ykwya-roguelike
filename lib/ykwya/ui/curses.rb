@@ -39,8 +39,9 @@ module YKWYA::UI
       @status = @screen.subwin(5, COLS, 25, 0)
 
       @player = YKWYA::Human.new
-      @game = YKWYA::Game.new(@player, @input_stream)
+      @game = YKWYA::Game.create_game(@player)
 
+=begin
       @attack_stream = @game.streams[:message].select do |event|
         event.type == :attack || event.type == :quaffed || event.type == :goldpicked
       end
@@ -63,9 +64,10 @@ module YKWYA::UI
                           "Player picked up #{event.data} gold!"
                         end
       end
+=end
 
       loop do
-        render!
+        render!(@game)
         action_message!('You are dead :(', false) if @player.dead?
         input_char = @screen.getch
         if input_char == 'q'
@@ -74,7 +76,6 @@ module YKWYA::UI
           @status << "Do you really want to quit? (Y/N)"
           break if @status.getch == 'y'
         end
-        execute_command! input_char unless @player.dead?
       end
       close_screen
     end
@@ -104,28 +105,30 @@ module YKWYA::UI
       end
     end
 
-    def render!
-      render_main_screen!
-      render_status!
+    def render!(game_state)
+      render_main_screen!(game_state)
+      render_status!(game_state)
     end
 
-    def render_main_screen!
+    def render_main_screen!(game_state)
       @main.clear
-      draw_map!
-      draw! @game.hoards
-      draw! @game.potions
-      draw_stairway!
-      draw! @game.monsters
-      draw_player!
+      draw_map! game_state
+      draw! game_state[:gold]
+      draw! game_state[:potions]
+      draw_stairway! game_state
+      draw! game_state[:monsters]
+      draw_player! game_state
       @main.refresh
     end
 
-    def render_status!
-      line1_left = "Race: #{@player.race} Gold: #{@player.gold}"
+    def render_status!(game_state)
+      player = game_state[:player]
+
+      line1_left = "Race: #{player.race} Gold: #{player.gold}"
       line1_right = "Floor 1"
-      line2 = "HP: #{@player.hitpoints}\n"
-      line3 = "Atk: #{@player.attack}\n"
-      line4 = "Def: #{@player.defense}\n"
+      line2 = "HP: #{player.hitpoints}\n"
+      line3 = "Atk: #{player.attack}\n"
+      line4 = "Def: #{player.defense}\n"
       line5 = "Action: "
 
       @status.clear
@@ -139,27 +142,29 @@ module YKWYA::UI
       @status.refresh
     end
 
-    def draw_map!
-      @game.map.each_pair do |coords, tile|
+    def draw_map!(game_state)
+      map = game_state[:terrain]
+
+      map.each_pair do |coords, tile|
         @main.setpos(coords[0] + OFFSETY, coords[1] + OFFSETX)
         @main.addch(tile.render_by @renderer)
       end
     end
 
-    def draw! list
+    def draw!(list)
       list.each do |coords|
         @main.setpos(coords[0][0] + OFFSETY, coords[0][1] + OFFSETX)
         @main.addch(coords[1].render_by @renderer)
       end
     end
 
-    def draw_stairway!
-      @main.setpos(*(map_to_curses @game.stairway_coords))
+    def draw_stairway!(game_state)
+      @main.setpos(*(map_to_curses game_state[:stairway_coords]))
       @main.addch('\\')
     end
 
-    def draw_player!
-      @main.setpos(*(map_to_curses @game.player_coords))
+    def draw_player!(game_state)
+      @main.setpos(*(map_to_curses game_state[:player_coords]))
       @main.addch(@player.render_by(@renderer))
     end
 

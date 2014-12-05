@@ -38,8 +38,8 @@ module YKWYA::UI
       @main.box('|', '-')
       @status = @screen.subwin(5, COLS, 25, 0)
 
-      @player = YKWYA::Human.new
-      @game = YKWYA::Game.create_game(@player)
+      player = YKWYA::Human.new
+      game = Frappuccino::Property.new(YKWYA::Game.create_game(player))
 
 =begin
       @attack_stream = @game.streams[:message].select do |event|
@@ -67,8 +67,8 @@ module YKWYA::UI
 =end
 
       loop do
-        render!(@game)
-        action_message!('You are dead :(', false) if @player.dead?
+        render!(game.now)
+        action_message!('You are dead :(', false) if player.dead?
         input_char = @screen.getch
         if input_char == 'q'
           @status.clear
@@ -165,7 +165,7 @@ module YKWYA::UI
 
     def draw_player!(game_state)
       @main.setpos(*(map_to_curses game_state[:player_coords]))
-      @main.addch(@player.render_by(@renderer))
+      @main.addch(game_state[:player].render_by(@renderer))
     end
 
     def action_message!(string, prompt = true)

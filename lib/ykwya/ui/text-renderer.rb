@@ -42,7 +42,7 @@ module YKWYA
       def render(object)
         # This is a naive solution, we should spend some
         # time investigating if there is a better way of
-        # doing this.
+        # doing this.b
         # TODO Can we do something more efficient than an
         # inspection + lookup?
         @@glyphs[object.class.name.split('::').last]

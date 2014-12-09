@@ -103,13 +103,14 @@ module YKWYA::UI
 
     def render_status!(game_state)
       player = game_state[:player]
+      status = game_state[:status]
 
       line1_left = "Race: #{player.race} Gold: #{player.gold}"
       line1_right = "Floor 1"
       line2 = "HP: #{player.hitpoints}\n"
       line3 = "Atk: #{player.attack}\n"
       line4 = "Def: #{player.defense}\n"
-      line5 = "Action: "
+      line5 = "Action: #{status}"
 
       @status.clear
       @status << line1_left +

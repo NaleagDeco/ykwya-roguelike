@@ -10,6 +10,10 @@ module YKWYA
     def ==(other)
       self.class.name == other.class.name
     end
+
+    def object_name
+      self.class.name.split('::').last
+    end
   end
 
   module Fighter

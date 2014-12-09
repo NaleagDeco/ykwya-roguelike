@@ -8,6 +8,7 @@ module YKWYA
 
     ## Current hitpoints
     attr_reader :hitpoints
+
     ## Current attack power
     attr_reader :attack
     ## Current defense power
@@ -45,6 +46,10 @@ module YKWYA
 
     def race
       self.class.name.split('::').last
+    end
+
+    def object_name
+      'Player'
     end
 
     private

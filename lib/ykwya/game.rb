@@ -48,7 +48,8 @@ module YKWYA
           .zip(unplaced_potions),
         monsters: empty_terrain.pop(unplaced_monsters.size)
           .zip(unplaced_monsters),
-        gold: empty_terrain.pop(unplaced_gold.size).zip(unplaced_gold)
+        gold: empty_terrain.pop(unplaced_gold.size).zip(unplaced_gold),
+        status: 'Welcome to YKWYA!'
       }
     end
 
@@ -91,19 +92,32 @@ module YKWYA
         stairway_coords: game_state[:stairway_coords].clone,
         potions: game_state[:potions].clone,
         monsters: attacking + moving,
-        gold: game_state[:gold]
+        gold: game_state[:gold],
+        status: game_state[:status]
       }
     end
 
-    def self.player_move!(game_state, offset)
+    def self.player_move(game_state, offset)
       player = game_state[:player].clone
+      status = ''
+
       possible_coords = game_state[:player_coords].zip(offset).map do |elem|
         elem.reduce(:+)
       end
 
       monsters = game_state[:monsters].map { |m| m.map { |elem| elem.clone } }
                  .group_by { |monster| monster[0] == possible_coords }
-      monsters.fetch(true, []).each { |monster| player.fight monster[1] }
+      monsters.fetch(true, []).each do |monster|
+        result = player.fight monster[1]
+        status << case result[2]
+                  when :missed
+                    "Player missed #{result[1].object_name}! "
+                  when :defeated
+                    "Player killed #{result[1].object_name}! "
+                  else
+                    "Player hit #{result[1].object_name} for #{result[2]} HP! "
+                  end
+      end
 
       new_coords = if monsters.key?(true) ||
                       game_state[:terrain][possible_coords].inaccessible?
@@ -114,11 +128,18 @@ module YKWYA
 
       potions = game_state[:potions].map { |p| p.map { |elem| elem.clone } }
                 .group_by { |potion| potion[0] == new_coords }
-      potions.fetch(true, []).each { |potion| player.quaff potion[1] }
+      potions.fetch(true, []).each do |potion|
+        player.quaff potion[1]
+        status << "Player drank potion for " <<
+          "#{potion[1].magnitude} #{potion[1].attribute.to_s[1..-1]}! "
+      end
 
       gold = game_state[:gold].map { |g| g.map { |elem| elem.clone } }
                 .group_by { |g| g[0] == new_coords }
-      gold.fetch(true, []).each { |g| player.gain_gold g[1].class.amount }
+      gold.fetch(true, []).each do |g|
+        player.gain_gold g[1].class.amount
+        status << "Player gained #{g[1].class.amount} gold! "
+      end
 
       {
         player: player,
@@ -127,7 +148,8 @@ module YKWYA
         stairway_coords: game_state[:stairway_coords].clone,
         potions: potions.fetch(false, []),
         monsters: monsters.fetch(true, []) + monsters.fetch(false, []),
-        gold: gold.fetch(false, [])
+        gold: gold.fetch(false, []),
+        status: status.empty? ? game_state[:status] : status
       }
     end
 
@@ -136,21 +158,21 @@ module YKWYA
       when :game_start
         game_state
       when :move_left
-        tick_world player_move!(game_state, [0, -1])
+        tick_world player_move(game_state, [0, -1])
       when :move_right
-        tick_world player_move!(game_state, [0, 1])
+        tick_world player_move(game_state, [0, 1])
       when :move_up
-        tick_world player_move!(game_state, [-1, 0])
+        tick_world player_move(game_state, [-1, 0])
       when :move_down
-        tick_world player_move!(game_state, [1, 0])
+        tick_world player_move(game_state, [1, 0])
       when :move_upright
-        tick_world player_move!(game_state, [-1, 1])
+        tick_world player_move(game_state, [-1, 1])
       when :move_upleft
-        tick_world player_move!(game_state, [-1, -1])
+        tick_world player_move(game_state, [-1, -1])
       when :move_downright
-        tick_world player_move!(game_state, [1, 1])
+        tick_world player_move(game_state, [1, 1])
       when :move_downleft
-        tick_world player_move!(game_state, [1, -1])
+        tick_world player_move(game_state, [1, -1])
       when :wait
         tick_world game_state
       when :quit

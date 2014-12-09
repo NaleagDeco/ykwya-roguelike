@@ -2,7 +2,7 @@ require_relative 'tile'
 require_relative 'event'
 
 module YKWYA
-  class Game
+  class GameState
     DIRECTIONS = [[-1, -1], [-1, 0], [-1, 1],
                   [0, -1], [0, 0], [0, 1],
                   [1, -1], [1, 0], [1, 1]]
@@ -64,33 +64,33 @@ module YKWYA
 
     def self.tick_world(game_state)
       player = game_state[:player].clone
-      monsters = game_state[:monsters].select { |monster| !monster.dead? }
+      monsters = game_state[:monsters].select { |monster| !monster[1].dead? }
                  .map { |monster| monster.map { |elem| elem.clone } }
 
       attacking = monsters.select do |monster|
-        neighbourhood(monster[0]).include? @player_coords
-      end.map { |monster| monster.map { |elem| elem.clone } }
+        neighbourhood(monster[0]).include? game_state[:player_coords]
+      end
       moving = monsters - attacking
 
       attacking.each do |monster|
-        monster[1].fight game_state[:player]
+        monster[1].fight player
       end
 
       moving.map! do |monster|
         new_coords = monster[0].zip(DIRECTIONS.sample).map do |coords|
           coords.inject(:+)
-        end while @map[new_coords].inaccessible?
+        end while game_state[:terrain][new_coords].inaccessible?
 
         [new_coords, monster[1]]
       end
 
       {
         player: player,
-        terrain: Hash[game_state[:terrain].map { |k, v| {k.clone => v.clone} }],
+        terrain: game_state[:terrain].clone,
         player_coords: game_state[:player_coords].clone,
         stairway_coords: game_state[:stairway_coords].clone,
         potions: game_state[:potions].clone,
-        monsters: game_state[:monsters],
+        monsters: attacking + moving,
         gold: game_state[:gold]
       }
     end
@@ -102,33 +102,62 @@ module YKWYA
       end
 
       monsters = game_state[:monsters].map { |m| m.map { |elem| elem.clone } }
-                 .group_by { |monster| monster[0] == new_coords }
-      monsters[true].each { |monster| player.fight monster[1] }
+                 .group_by { |monster| monster[0] == possible_coords }
+      monsters.fetch(true, []).each { |monster| player.fight monster[1] }
 
-      new_coords = if monsters.exists_key(true) ||
+      new_coords = if monsters.key?(true) ||
                       game_state[:terrain][possible_coords].inaccessible?
-                     possible_coords.clone
+                     game_state[:player_coords].clone
                    else
-                     game_state[:player_coords]
+                     possible_coords
                    end
 
       potions = game_state[:potions].map { |p| p.map { |elem| elem.clone } }
                 .group_by { |potion| potion[0] == new_coords }
-      potions[true].each { |potion| player.quaff potion[1] }
+      potions.fetch(true, []).each { |potion| player.quaff potion[1] }
 
       gold = game_state[:gold].map { |g| g.map { |elem| elem.clone } }
                 .group_by { |g| g[0] == new_coords }
-      gold[true].each { |g| player.gain_gold g[1].amount }
+      gold.fetch(true, []).each { |g| player.gain_gold g[1].class.amount }
 
       {
         player: player,
-        terrain: Hash[game_state[:terrain].map { |k,v| {k.clone => v.clone} }],
+        terrain: game_state[:terrain].clone,
         player_coords: new_coords,
         stairway_coords: game_state[:stairway_coords].clone,
-        potions: potions[false],
-        monsters: monsters[true] + monsters[false],
-        gold: gold[false]
+        potions: potions.fetch(false, []),
+        monsters: monsters.fetch(true, []) + monsters.fetch(false, []),
+        gold: gold.fetch(false, [])
       }
+    end
+
+    def self.process_input(game_state, input)
+      case input
+      when :game_start
+        game_state
+      when :move_left
+        tick_world player_move!(game_state, [0, -1])
+      when :move_right
+        tick_world player_move!(game_state, [0, 1])
+      when :move_up
+        tick_world player_move!(game_state, [-1, 0])
+      when :move_down
+        tick_world player_move!(game_state, [1, 0])
+      when :move_upright
+        tick_world player_move!(game_state, [-1, 1])
+      when :move_upleft
+        tick_world player_move!(game_state, [-1, -1])
+      when :move_downright
+        tick_world player_move!(game_state, [1, 1])
+      when :move_downleft
+        tick_world player_move!(game_state, [1, -1])
+      when :wait
+        tick_world game_state
+      when :quit
+        game_state
+      else
+        game_state
+      end
     end
   end
 end

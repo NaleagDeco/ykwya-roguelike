@@ -18,7 +18,7 @@ module YKWYA::UI
 
     def initialize
       @renderer = TextRenderer.new
-      @input_stream = Frappuccino::Stream.new(YKWYA::Action.instance)
+      @input_stream = Frappuccino::Stream.new(YKWYA::UserInput.instance)
 
       Pry.config.hooks.add_hook(:before_session, :disable_curses) do
         close_screen
@@ -29,7 +29,7 @@ module YKWYA::UI
       end
     end
 
-    def run!
+    def initialize_screen
       noecho
       curs_set 0
 
@@ -37,47 +37,25 @@ module YKWYA::UI
       @main = @screen.subwin(25, COLS, 0, 0)
       @main.box('|', '-')
       @status = @screen.subwin(5, COLS, 25, 0)
+    end
+
+    def run!
+      initialize_screen
 
       player = YKWYA::Human.new
-      game = Frappuccino::Property.new(YKWYA::Game.create_game(player))
+      initial_state = YKWYA::GameState.create_game(player)
+      game_state = @input_stream.scan(initial_state) do |last_state, input|
+        YKWYA::GameState.process_input(last_state, input)
+      end
+      game_state.on_value do |state|
+        render! state
+      end
 
-=begin
-      @attack_stream = @game.streams[:message].select do |event|
-        event.type == :attack || event.type == :quaffed || event.type == :goldpicked
+      YKWYA::UserInput.instance.start!
+      while true
+        @screen.refresh
+        execute_command! @main.getch
       end
-      @attack_stream.on_value do |event|
-        action_message! case event.type
-                        when :attack
-                          result = event.data
-                          attacker = @renderer.name result[0]
-                          defender = @renderer.name result[1]
-                          if result[2] == :missed
-                            "#{attacker} missed when attacking #{defender}!"
-                          elsif result[2] == :defeated
-                            "#{attacker} defeated #{defender}!"
-                          else
-                            "#{attacker} attacked #{defender} for #{result[2]} damage!"
-                          end
-                        when :quaffed
-                          "Player modified #{event.data.attribute.to_s.capitalize} by #{event.data.magnitude}!"
-                        when :goldpicked
-                          "Player picked up #{event.data} gold!"
-                        end
-      end
-=end
-
-      loop do
-        render!(game.now)
-        action_message!('You are dead :(', false) if player.dead?
-        input_char = @screen.getch
-        if input_char == 'q'
-          @status.clear
-          @status.setpos(@status.begy, @status.begx)
-          @status << "Do you really want to quit? (Y/N)"
-          break if @status.getch == 'y'
-        end
-      end
-      close_screen
     end
 
     private
@@ -85,23 +63,25 @@ module YKWYA::UI
     def execute_command!(char)
       case char
       when 'h'
-        YKWYA::Action.instance.move_left!
+        YKWYA::UserInput.instance.move_left!
       when 'j'
-        YKWYA::Action.instance.move_down!
+        YKWYA::UserInput.instance.move_down!
       when 'k'
-        YKWYA::Action.instance.move_up!
+        YKWYA::UserInput.instance.move_up!
       when 'l'
-        YKWYA::Action.instance.move_right!
+        YKWYA::UserInput.instance.move_right!
       when 'y'
-        YKWYA::Action.instance.move_upleft!
+        YKWYA::UserInput.instance.move_upleft!
       when 'u'
-        YKWYA::Action.instance.move_upright!
+        YKWYA::UserInput.instance.move_upright!
       when 'b'
-        YKWYA::Action.instance.move_downleft!
+        YKWYA::UserInput.instance.move_downleft!
       when 'n'
-        YKWYA::Action.instance.move_downright!
+        YKWYA::UserInput.instance.move_downright!
       when 'w'
-        YKWYA::Action.instance.wait!
+        YKWYA::UserInput.instance.wait!
+      when 'q'
+        YKWYA::UserInput.instance.quit!
       end
     end
 

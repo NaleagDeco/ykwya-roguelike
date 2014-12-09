@@ -1,3 +1,4 @@
+# coding: utf-8
 require_relative 'text-renderer'
 require_relative '../game'
 require_relative '../player'
@@ -49,6 +50,13 @@ module YKWYA::UI
       end
       game_state.on_value do |state|
         render! state
+      end
+      @input_stream.select { |input| input == :quit }.on_value do
+        at_exit do
+          close_screen
+          puts '♥ Thank you for playing ♥'
+        end
+        exit
       end
 
       YKWYA::UserInput.instance.start!

@@ -46,10 +46,6 @@ module YKWYA
 
     def quit!
       emit :quit
-
-
-
-
     end
   end
 end

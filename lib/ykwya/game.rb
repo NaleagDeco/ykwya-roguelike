@@ -154,9 +154,12 @@ module YKWYA
     end
 
     def self.process_input(game_state, input)
+      if game_state[:player].dead?
+        game_state[:status] = 'You are dead :('
+        return game_state
+      end
+
       case input
-      when :game_start
-        game_state
       when :move_left
         tick_world player_move(game_state, [0, -1])
       when :move_right

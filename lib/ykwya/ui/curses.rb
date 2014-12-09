@@ -154,25 +154,9 @@ module YKWYA::UI
 
     def draw_player!(game_state)
       @main.setpos(*(map_to_curses game_state[:player_coords]))
+      @main.attron(A_STANDOUT)
       @main.addch(game_state[:player].render_by(@renderer))
-    end
-
-    def action_message!(string, prompt = true)
-      offset = [4, 'Action: '.length]
-
-      @status.setpos(*offset)
-      @status.clrtoeol
-      @status << string
-      @status.refresh
-      if prompt
-        sleep 0.25
-        @status << ' --Press Any Key --'
-        @status.refresh
-        @status.getch
-        @status.setpos(*offset)
-        @status.clrtoeol
-        @status.refresh
-      end
+      @main.attroff(A_STANDOUT)
     end
 
     def map_to_curses(coords)
